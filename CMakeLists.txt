@@ -28,6 +28,7 @@ SET(CMAKE_PREFIX_PATH /home/hi/Qt5.12.10/5.12.10/gcc_64)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package( OpenCV REQUIRED )
 
 if(ANDROID)
   add_library(barCodeDetector SHARED
@@ -45,4 +46,4 @@ else()
   )
 endif()
 
-target_link_libraries(barCodeDetector PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(barCodeDetector PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS})

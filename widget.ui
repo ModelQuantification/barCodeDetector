@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget</class>
+ <widget class="QWidget" name="Widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>11</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <widget class="QPushButton" name="openCamera">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>630</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Open Camera</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="detectImage">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>630</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Detect Image</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="detectBarCode">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>630</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Detect Bar Code</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="closeCamera">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>630</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Close Camera</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="barCodeShow">
+   <property name="geometry">
+    <rect>
+     <x>830</x>
+     <y>630</y>
+     <width>351</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>27</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>就绪！</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -88,6 +88,19 @@
     <string>就绪！</string>
    </property>
   </widget>
+  <widget class="QLabel" name="imgFrame">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>120</y>
+     <width>681</width>
+     <height>461</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

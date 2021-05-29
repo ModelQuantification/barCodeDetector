@@ -93,10 +93,15 @@ int GenerateMiddleYData(Mat image, uint8_t *ptrPx)
     int weight = copy_img.cols;
     int nc = copy_img.channels();
     // printf("通道数为%d\n",nc);
+
+    // 二维码中间必定是有数据的，把中间那条线经过的每个像素都记录到内存中
     int middleHeight = height / 2;
-    for (int i = 0; i < weight; i++)
+    for (int i = 0; i < weight; ++i)
     {
-        printf("%d\n", copy_img.ptr<Vec3b>(middleHeight)[i][0]);
+        memset(ptrPx + i, (uint8_t)copy_img.ptr<Vec3b>(middleHeight)[i][0], 1);
+        // printf("%d\n", copy_img.ptr<Vec3b>(middleHeight)[i][0]);
     }
+    memset(ptrPx + weight, 99, 1);
+    // printf("\n\n\n");
     return 0;
 }

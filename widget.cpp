@@ -44,12 +44,23 @@ void Widget::on_detectImage_clicked()
     // 读取条形码中间一行像素并返回
     int ret;
 
-    // 读取条形码宽度，把宽度分配内存
+    // 读取条形码宽度，把图片的宽度作为请求的内存大小
     int barCodeWeight = barCodeImg.cols;
-    uint8_t *pWeight = (uint8_t *)malloc(barCodeWeight * sizeof(uint8_t));
-    if (pWeight == NULL)
+    uint8_t *pWeight = (uint8_t *)malloc(barCodeWeight * sizeof(uint8_t) + 1);
+    if (pWeight == NULL)  // 如果请求不了内存
         return;
     ret = GenerateMiddleYData(barCodeImg, pWeight);
+
+    // unitTest 检验返回的内存是否正确
+    // if (0 == ret)
+    // {
+    //     int i = 0;
+    //     while (*(pWeight + i) != 99)
+    //     {
+    //         printf("%d\n", *(pWeight + i));
+    //         i++;
+    //     }
+    // }
 
     // 在QT中显示效果
     Mat cvTempImg;

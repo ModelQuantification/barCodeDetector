@@ -11,7 +11,7 @@
 using namespace cv;
 using namespace std;
 
-Widget::Widget(QWidget *parent):QWidget(parent), ui(new Ui::Widget)
+Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 {
     ui->setupUi(this);
 }
@@ -28,22 +28,28 @@ void Widget::on_openCamera_clicked()
 void Widget::on_detectImage_clicked()
 {
     QString imgName = QFileDialog::getOpenFileName(this, tr("open image file"), "./",
-                      tr("Image files(*.png *.jpg);;All files (*.*)"));
+                                                   tr("Image files(*.png *.jpg);;All files (*.*)"));
     if (imgName.isEmpty())
         return;
-    Mat OriginImg, barCodeMaskImg;
+    Mat originImg, barCodeMaskImg;
     Mat barCodeImg, framedBarCodeImg;
-    
-    OriginImg = imread(imgName.toStdString());
 
-    barCodeMaskImg = DetectBarCodeInImage(OriginImg);
-    
+    originImg = imread(imgName.toStdString());
+
+    barCodeMaskImg = DetectBarCodeInImage(originImg);
+
     // 可以修改函数代码为裁减或带框
-    barCodeImg = DrawFrame4BarCode(OriginImg, barCodeMaskImg);
+    barCodeImg = DrawFrame4BarCode(originImg, barCodeMaskImg);
 
     // 读取条形码中间一行像素并返回
     int ret;
-    ret = GenerateMiddleYData(barCodeImg);
+
+    // 读取条形码宽度，把宽度分配内存
+    int barCodeWeight = barCodeImg.cols;
+    uint8_t *pWeight = (uint8_t *)malloc(barCodeWeight * sizeof(uint8_t));
+    if (pWeight == NULL)
+        return;
+    ret = GenerateMiddleYData(barCodeImg, pWeight);
 
     // 在QT中显示效果
     Mat cvTempImg;
@@ -53,6 +59,10 @@ void Widget::on_detectImage_clicked()
     ui->imgFrame->clear();
     ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
     ui->imgFrame->show();
+
+    // 释放条形码宽度指针
+    free(pWeight);
+    pWeight = NULL;
 
     // 当没有imshow时关闭waitKey
     waitKey();

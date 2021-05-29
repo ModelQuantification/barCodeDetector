@@ -4,7 +4,8 @@
  * @brief 探测条形码,返回条形码裁减图
  * @note 可返回未裁减图
  */
-Mat DetectBarCodeInImage(Mat image){
+Mat DetectBarCodeInImage(Mat image)
+{
     Mat gray, gaus;
     Mat SobelX, SobelY, SobelOut;
     // 转化为灰度图
@@ -58,7 +59,8 @@ Mat DetectBarCodeInImage(Mat image){
 /**
  * @brief 对条形码画框,返回带框的未裁减原图
  */
-Mat DrawFrame4BarCode(Mat image, Mat mask){
+Mat DrawFrame4BarCode(Mat image, Mat mask)
+{
     Mat resultImage;
     Rect rect;
     // 角点初始化
@@ -77,24 +79,24 @@ Mat DrawFrame4BarCode(Mat image, Mat mask){
     resultImage = Mat(image, rect);
     // 对带框图片深拷贝
     // image.copyTo(resultImage);
-    
+
     // imshow("二维码矩形区域图像裁剪", resultImage);
     return resultImage;
 }
 
-
-int GenerateMiddleYData(Mat image){
+int GenerateMiddleYData(Mat image, uint8_t *ptrPx)
+{
     Mat copy_img;
     image.copyTo(copy_img);
     threshold(copy_img, copy_img, 178, 255, CV_THRESH_BINARY);
     int height = copy_img.rows;
-	int weight = copy_img.cols;
-	int nc = copy_img.channels();
+    int weight = copy_img.cols;
+    int nc = copy_img.channels();
     // printf("通道数为%d\n",nc);
-    int middleHeight = height/2;
+    int middleHeight = height / 2;
     for (int i = 0; i < weight; i++)
     {
-        printf("%d\n",copy_img.ptr<Vec3b>(middleHeight)[i][0]);
+        printf("%d\n", copy_img.ptr<Vec3b>(middleHeight)[i][0]);
     }
     return 0;
 }

@@ -1,8 +1,7 @@
 #include "ocv.h"
 
 /**
- * @brief 探测条形码,返回条形码裁减图
- * @note 可返回未裁减图
+ * @brief 探测条形码,返回条形码Mask图
  */
 Mat DetectBarCodeInImage(Mat image)
 {
@@ -57,7 +56,8 @@ Mat DetectBarCodeInImage(Mat image)
 }
 
 /**
- * @brief 对条形码画框,返回带框的未裁减原图
+ * @brief 对条形码画框,返回条形码裁减图
+ * @note 可返回未裁减图
  */
 Mat DrawFrame4BarCode(Mat image, Mat mask)
 {

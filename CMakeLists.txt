@@ -11,39 +11,21 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-SET(CMAKE_PREFIX_PATH /home/hi/Qt5.12.10/5.12.10/gcc_64)
-
-# QtCreator supports the following variables for Android, which are identical to qmake Android variables.
-# Check http://doc.qt.io/qt-5/deployment-android.html for more information.
-# They need to be set before the find_package(Qt5 ...) call.
-
-#if(ANDROID)
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-#    if (ANDROID_ABI STREQUAL "armeabi-v7a")
-#        set(ANDROID_EXTRA_LIBS
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libcrypto.so
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
-#    endif()
-#endif()
+set(CMAKE_PREFIX_PATH /home/hi/Qt5.12.10/5.12.10/gcc_64)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
-find_package( OpenCV REQUIRED )
+find_package(OpenCV REQUIRED)
 
-if(ANDROID)
-  add_library(barCodeDetector SHARED
-    main.cpp
-    widget.cpp
-    widget.h
-    widget.ui
-  )
-else()
-  add_executable(barCodeDetector
-    main.cpp
-    widget.cpp
-    widget.h
-    widget.ui
-  )
-endif()
+include_directories(User)
+file(GLOB_RECURSE SOURCES "User/*.*")
+
+add_executable(barCodeDetector
+  ${SOURCES}
+  main.cpp
+  widget.cpp
+  widget.h
+  widget.ui
+)
 
 target_link_libraries(barCodeDetector PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS})

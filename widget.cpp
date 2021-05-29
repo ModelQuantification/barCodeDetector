@@ -1,10 +1,12 @@
-#include <opencv2/opencv.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/imgproc/types_c.h>
+#include "opencv2/opencv.hpp"
+#include "opencv2/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/imgproc/types_c.h"
 #include "widget.h"
 #include "./ui_widget.h"
 #include "QFileDialog"
+
+#include "./User/ocv.h"
 
 using namespace cv;
 using namespace std;

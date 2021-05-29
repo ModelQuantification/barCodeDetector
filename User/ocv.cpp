@@ -69,8 +69,10 @@ Mat DrawFrame4BarCode(Mat image, Mat mask){
     {
         Rect rect = boundingRect((Mat)contours[i]);
         rectangle(image, rect, Scalar(255, 0, 0), 2);
-        resultImage = Mat(image, rect);
     }
+
+    // 对带框图片深拷贝
+    image.copyTo(resultImage);
     
     // imshow("二维码矩形区域图像裁剪", resultImage);
     return resultImage;

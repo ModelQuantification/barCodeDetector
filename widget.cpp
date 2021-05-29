@@ -31,22 +31,20 @@ void Widget::on_detectImage_clicked()
                       tr("Image files(*.png *.jpg);;All files (*.*)"));
     if (imgName.isEmpty())
         return;
-    Mat OriginImg, barCodeMaskImg, barCodeImg;
+    Mat OriginImg, barCodeMaskImg;
+    Mat barCodeImg, framedBarCodeImg;
     
     OriginImg = imread(imgName.toStdString());
 
     barCodeMaskImg = DetectBarCodeInImage(OriginImg);
     
-    // TODO 把条形码裁减，进入下一操作
-    // barCodeImg = 
-
-    Mat detectedBarCodeImg = DrawFrame4BarCode(OriginImg, barCodeMaskImg);
-    
+    // 可以修改函数代码为裁减或带框
+    framedBarCodeImg = DrawFrame4BarCode(OriginImg, barCodeMaskImg);
 
     // 在QT中显示效果
     Mat cvTempImg;
     QImage qtShowImg;
-    cv::cvtColor(detectedBarCodeImg, cvTempImg, COLOR_BGR2RGB);
+    cv::cvtColor(framedBarCodeImg, cvTempImg, COLOR_BGR2RGB);
     qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
     ui->imgFrame->clear();
     ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));

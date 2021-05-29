@@ -1,7 +1,8 @@
 #include "ocv.h"
 
 /**
- * @brief 探测条形码,返回对于条形码为二值化的未裁减图
+ * @brief 探测条形码,返回条形码裁减图
+ * @note 可返回未裁减图
  */
 Mat DetectBarCodeInImage(Mat image){
     Mat gray, gaus;
@@ -59,6 +60,7 @@ Mat DetectBarCodeInImage(Mat image){
  */
 Mat DrawFrame4BarCode(Mat image, Mat mask){
     Mat resultImage;
+    Rect rect;
     // 角点初始化
     vector<vector<Point>> contours;
     vector<Vec4i> hiera;
@@ -67,12 +69,14 @@ Mat DrawFrame4BarCode(Mat image, Mat mask){
     findContours(mask, contours, hiera, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
     for (int i = 0; i < contours.size(); i++)
     {
-        Rect rect = boundingRect((Mat)contours[i]);
+        rect = boundingRect((Mat)contours[i]);
         rectangle(image, rect, Scalar(255, 0, 0), 2);
     }
 
+    // 对带框图片裁减
+    resultImage = Mat(image, rect);
     // 对带框图片深拷贝
-    image.copyTo(resultImage);
+    // image.copyTo(resultImage);
     
     // imshow("二维码矩形区域图像裁剪", resultImage);
     return resultImage;

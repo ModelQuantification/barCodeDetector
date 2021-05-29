@@ -20,7 +20,6 @@ Widget::~Widget()
     delete ui;
 }
 
-
 void Widget::on_openCamera_clicked()
 {
 }
@@ -70,20 +69,17 @@ void Widget::on_detectImage_clicked()
     erode(Threshold, Threshold, element);
     // imshow("腐蚀",Threshold);
 
-    // 膨胀，填充条形码间空隙，根据核的大小，有可能需要2~3次膨胀操作
-    dilate(Threshold, Threshold, element);
-    dilate(Threshold, Threshold, element);
-    dilate(Threshold, Threshold, element);
-    dilate(Threshold, Threshold, element);
-    dilate(Threshold, Threshold, element);
-    // imshow("膨胀",Threshold);
+    // 膨胀，填充条形码间空隙
+    for (int i = 0; i < 10; ++i)
+        dilate(Threshold, Threshold, element);
+    imshow("膨胀", Threshold);
 
     // 闭运算，填充条形码间隙
     element = getStructuringElement(0, Size(5, 5));
     morphologyEx(Threshold, Threshold, MORPH_CLOSE, element);
     // imshow("再做闭运算",Threshold);
 
-    // xxxx
+    // 角点配置
     vector<vector<Point>> contours;
     vector<Vec4i> hiera;
 
@@ -93,21 +89,20 @@ void Widget::on_detectImage_clicked()
     {
         Rect rect = boundingRect((Mat)contours[i]);
         rectangle(image, rect, Scalar(255), 2);
-        // 将扫描的图像裁剪下来,并保存为相应的结果,保留一些X方向的边界,所以对rect进行一定的扩张
-        rect.x = rect.x - (rect.width / 20);
-        rect.width = rect.width * 1.1;
         Mat resultImage = Mat(image, rect);
         // imshow("图像裁剪", resultImage);
+        // printf("%d\n", contours.size());
     }
 
     Mat temp;
     QImage qtImg;
     cv::cvtColor(image, temp, COLOR_BGR2RGB);
-    qtImg = QImage((const unsigned char*)(temp.data), temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+    qtImg = QImage((const unsigned char *)(temp.data), temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
     ui->imgFrame->clear();
     ui->imgFrame->setPixmap(QPixmap::fromImage(qtImg));
     ui->imgFrame->show();
-    // imshow("找出二维码矩形区域", image);
+
+    imshow("找出二维码矩形区域", image);
 
     waitKey();
 }

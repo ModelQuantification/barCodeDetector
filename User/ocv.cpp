@@ -1,7 +1,9 @@
 #include "ocv.h"
 
+/**
+ * @brief 探测条形码,返回对于条形码为二值化的未裁减图
+ */
 Mat DetectBarCodeInImage(Mat image){
-
     Mat gray, gaus;
     Mat SobelX, SobelY, SobelOut;
     // 转化为灰度图
@@ -40,7 +42,7 @@ Mat DetectBarCodeInImage(Mat image){
     // imshow("腐蚀",Threshold);
 
     // 膨胀，填充条形码间空隙
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 5; ++i)
         dilate(Threshold, Threshold, element);
     // imshow("膨胀", Threshold);
 
@@ -50,4 +52,26 @@ Mat DetectBarCodeInImage(Mat image){
     // imshow("再做闭运算",Threshold);
 
     return Threshold;
+}
+
+/**
+ * @brief 对条形码画框,返回带框的未裁减原图
+ */
+Mat DrawFrame4BarCode(Mat image, Mat mask){
+    Mat resultImage;
+    // 角点初始化
+    vector<vector<Point>> contours;
+    vector<Vec4i> hiera;
+
+    // 通过findContours找到条形码区域的矩形边界
+    findContours(mask, contours, hiera, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    for (int i = 0; i < contours.size(); i++)
+    {
+        Rect rect = boundingRect((Mat)contours[i]);
+        rectangle(image, rect, Scalar(255, 0, 0), 2);
+        resultImage = Mat(image, rect);
+    }
+    
+    // imshow("二维码矩形区域图像裁剪", resultImage);
+    return resultImage;
 }

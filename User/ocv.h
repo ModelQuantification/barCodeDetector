@@ -9,3 +9,4 @@ using namespace cv;
 using namespace std;
 
 Mat DetectBarCodeInImage(Mat image);
+Mat DrawFrame4BarCode(Mat image,Mat mask);

@@ -31,34 +31,25 @@ void Widget::on_detectImage_clicked()
                       tr("Image files(*.png *.jpg);;All files (*.*)"));
     if (imgName.isEmpty())
         return;
-    Mat image;
+    Mat OriginImg, barCodeMaskImg, barCodeImg;
     
-    image = imread(imgName.toStdString());
+    OriginImg = imread(imgName.toStdString());
 
-    // 探测条形码并显示二值化全图
-    image = DetectBarCodeInImage(image);
+    barCodeMaskImg = DetectBarCodeInImage(OriginImg);
+    
+    // TODO 把条形码裁减，进入下一操作
+    // barCodeImg = 
 
-    // 角点初始化
-    vector<vector<Point>> contours;
-    vector<Vec4i> hiera;
-
-    // 通过findContours找到条形码区域的矩形边界
-    findContours(image, contours, hiera, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-    for (int i = 0; i < contours.size(); i++)
-    {
-        Rect rect = boundingRect((Mat)contours[i]);
-        rectangle(image, rect, Scalar(255), 2);
-        Mat resultImage = Mat(image, rect);
-        // imshow("二维码矩形区域图像裁剪", resultImage);
-    }
+    Mat detectedBarCodeImg = DrawFrame4BarCode(OriginImg, barCodeMaskImg);
+    
 
     // 在QT中显示效果
-    Mat temp;
-    QImage qtImg;
-    cv::cvtColor(image, temp, COLOR_BGR2RGB);
-    qtImg = QImage((const unsigned char *)(temp.data), temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+    Mat cvTempImg;
+    QImage qtShowImg;
+    cv::cvtColor(detectedBarCodeImg, cvTempImg, COLOR_BGR2RGB);
+    qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
     ui->imgFrame->clear();
-    ui->imgFrame->setPixmap(QPixmap::fromImage(qtImg));
+    ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
     ui->imgFrame->show();
 
     // 当没有imshow时关闭waitKey

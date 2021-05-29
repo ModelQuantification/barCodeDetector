@@ -81,3 +81,20 @@ Mat DrawFrame4BarCode(Mat image, Mat mask){
     // imshow("二维码矩形区域图像裁剪", resultImage);
     return resultImage;
 }
+
+
+int GenerateMiddleYData(Mat image){
+    Mat copy_img;
+    image.copyTo(copy_img);
+    threshold(copy_img, copy_img, 178, 255, CV_THRESH_BINARY);
+    int height = copy_img.rows;
+	int weight = copy_img.cols;
+	int nc = copy_img.channels();
+    // printf("通道数为%d\n",nc);
+    int middleHeight = height/2;
+    for (int i = 0; i < weight; i++)
+    {
+        printf("%d\n",copy_img.ptr<Vec3b>(middleHeight)[i][0]);
+    }
+    return 0;
+}

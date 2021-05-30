@@ -47,9 +47,19 @@ void Widget::on_detectImage_clicked()
     // 读取条形码宽度，把图片的宽度作为请求的内存大小
     int barCodeWeight = barCodeImg.cols;
     uint8_t *pWeight = (uint8_t *)malloc(barCodeWeight * sizeof(uint8_t) + 1);
-    if (pWeight == NULL)  // 如果请求不了内存
+    if (pWeight == NULL) // 如果请求不了内存
         return;
     ret = GenerateMiddleYData(barCodeImg, pWeight);
+
+    // 找到开始位置和结束位置
+    if (0 == ret)
+    {
+        int i = 0;
+        // while (*(pWeight + i) != 99)
+        // {
+
+        // }
+    }
 
     // unitTest 检验返回的内存是否正确
     // if (0 == ret)

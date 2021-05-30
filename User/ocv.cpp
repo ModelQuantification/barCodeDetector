@@ -99,7 +99,7 @@ int GenerateMiddleYData(Mat image, uint8_t *ptrPx)
     for (int i = 0; i < weight; ++i)
     {
         memset(ptrPx + i, (uint8_t)copy_img.ptr<Vec3b>(middleHeight)[i][0], 1);
-        // printf("%d\n", copy_img.ptr<Vec3b>(middleHeight)[i][0]);
+        printf("%d, ", copy_img.ptr<Vec3b>(middleHeight)[i][0]);
     }
     memset(ptrPx + weight, 99, 1);
     // printf("\n\n\n");

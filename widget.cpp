@@ -23,6 +23,26 @@ Widget::~Widget()
 
 void Widget::on_openCamera_clicked()
 {
+    int WIDTH = 720;
+    int HEIGHT = 480;
+    int FPS = 30;
+
+    VideoCapture capture(0);
+    if (!capture.isOpened())
+    {
+        std::cout << "摄像头没连接";
+    }
+
+    cv::Mat frame;
+    while (1)
+    {
+        capture >> frame;
+        imshow("读取视频", frame);
+        // ESC
+        if (cv::waitKey(1) == 27)
+            break;
+    }
+    cv::destroyAllWindows();
 }
 
 void Widget::on_detectImage_clicked()

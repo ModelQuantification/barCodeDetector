@@ -5,7 +5,7 @@
 #include "widget.h"
 #include "./ui_widget.h"
 #include "QFileDialog"
-
+#include "./User/test.h"
 #include "./User/ocv.h"
 
 using namespace cv;
@@ -129,4 +129,8 @@ void Widget::on_detectBarCode_clicked()
 
 void Widget::on_closeCamera_clicked()
 {
+    int ret;
+    int argc;
+    const char **argv;
+    ret = test(argc, argv);
 }

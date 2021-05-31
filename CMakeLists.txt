@@ -20,8 +20,11 @@ find_package(OpenCV REQUIRED)
 include_directories(User)
 file(GLOB_RECURSE SOURCES "User/*.*")
 
+qt5_add_resources(qrcs ico.qrc)
+
 add_executable(barCodeDetector
   ${SOURCES}
+  ${qrcs}
   main.cpp
   widget.cpp
   widget.h

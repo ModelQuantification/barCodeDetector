@@ -11,7 +11,7 @@
 using namespace cv;
 using namespace std;
 
-Widget::Widget(QWidget *parent):QWidget(parent), ui(new Ui::Widget)
+Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 {
     ui->setupUi(this);
 }
@@ -23,43 +23,121 @@ Widget::~Widget()
 
 void Widget::on_openCamera_clicked()
 {
+    int WIDTH = 720;
+    int HEIGHT = 480;
+    int FPS = 30;
+
+    VideoCapture capture(0);
+    if (!capture.isOpened())
+    {
+        std::cout << "摄像头没连接";
+    }
+
+    cv::Mat frame;
+    while (1)
+    {
+        capture >> frame;
+        imshow("读取视频", frame);
+        // ESC
+        if (cv::waitKey(1) == 27)
+            break;
+    }
+    cv::destroyAllWindows();
 }
 
 void Widget::on_detectImage_clicked()
 {
     QString imgName = QFileDialog::getOpenFileName(this, tr("open image file"), "./",
-                      tr("Image files(*.png *.jpg);;All files (*.*)"));
+                                                   tr("Image files(*.png *.jpg);;All files (*.*)"));
     if (imgName.isEmpty())
         return;
-    Mat image;
-    
-    image = imread(imgName.toStdString());
+    Mat originImg, barCodeMaskImg;
+    Mat barCodeImg, framedBarCodeImg;
 
-    // 探测条形码并显示二值化全图
-    image = DetectBarCodeInImage(image);
+    originImg = imread(imgName.toStdString());
 
-    // 角点初始化
-    vector<vector<Point>> contours;
-    vector<Vec4i> hiera;
+    barCodeMaskImg = DetectBarCodeInImage(originImg);
 
-    // 通过findContours找到条形码区域的矩形边界
-    findContours(image, contours, hiera, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-    for (int i = 0; i < contours.size(); i++)
+    // 可以修改函数代码为裁减或带框
+    barCodeImg = DrawFrame4BarCode(originImg, barCodeMaskImg);
+
+    // 读取条形码中间一行像素并返回
+    int ret;
+
+    // 读取条形码宽度，把图片的宽度作为请求的内存大小
+    int barCodeWeight = barCodeImg.cols;
+    uint8_t *pWeight = (uint8_t *)malloc(barCodeWeight * sizeof(uint8_t) + 1);
+    if (pWeight == NULL) // 如果请求不了内存
+        return;
+    ret = GenerateMiddleYData(barCodeImg, pWeight);
+
+    // 创建条形码图片存在信息的像素区间(起始和结束)
+    int barCodeStartPx = 0;
+    int barCodeEndPx = 0;
+    // 找到开始位置和结束位置
+    if (0 == ret)
     {
-        Rect rect = boundingRect((Mat)contours[i]);
-        rectangle(image, rect, Scalar(255), 2);
-        Mat resultImage = Mat(image, rect);
-        // imshow("二维码矩形区域图像裁剪", resultImage);
+        int i = 0;
+        while (*(pWeight + i) != 99)
+        {
+            // TODO *(pWeight + i - 1) 向前溢出
+            // 判断第一个黑色像素
+            // if (*(pWeight + i) == 0 && *(pWeight + i - 1) == 255)
+            if (*(pWeight + i) == 0)
+            {
+                // 把黑色像素的位置打印出来
+                // printf("%d",i);
+                barCodeStartPx = i;
+                // 当
+                // if (i < barCodeStartPx || barCodeStartPx != 0)
+                // {
+                //     barCodeStartPx = i;
+                // }
+            }
+
+            // 判断最后一个黑色像素, 但要注意一旦到最后一个就break掉
+            // if (*(pWeight + i) == 255 && *(pWeight + i - 1) == 0)
+            if (*(pWeight + i) == 255)
+            {
+                // 把白色像素的位置打印出来
+                // printf("%d",i);
+                barCodeEndPx = i;
+                // 当
+                // if (i < barCodeEndPx || barCodeEndPx != 0)
+                // {
+                //     barCodeEndPx = i - 1;
+                //     break;
+                // }
+            }
+            i++;
+        }
+        printf("\n\n\n");
+        printf("%d||%d\n", barCodeStartPx, barCodeEndPx);
     }
 
+    // unitTest 检验返回的内存是否正确
+    // if (0 == ret)
+    // {
+    //     int i = 0;
+    //     while (*(pWeight + i) != 99)
+    //     {
+    //         printf("%d\n", *(pWeight + i));
+    //         i++;
+    //     }
+    // }
+
     // 在QT中显示效果
-    Mat temp;
-    QImage qtImg;
-    cv::cvtColor(image, temp, COLOR_BGR2RGB);
-    qtImg = QImage((const unsigned char *)(temp.data), temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+    Mat cvTempImg;
+    QImage qtShowImg;
+    cv::cvtColor(barCodeImg, cvTempImg, COLOR_BGR2RGB);
+    qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
     ui->imgFrame->clear();
-    ui->imgFrame->setPixmap(QPixmap::fromImage(qtImg));
+    ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
     ui->imgFrame->show();
+
+    // 释放条形码宽度指针
+    free(pWeight);
+    pWeight = NULL;
 
     // 当没有imshow时关闭waitKey
     waitKey();

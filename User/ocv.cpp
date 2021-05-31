@@ -1,7 +1,10 @@
 #include "ocv.h"
 
-Mat DetectBarCodeInImage(Mat image){
-
+/**
+ * @brief 探测条形码,返回条形码Mask图
+ */
+Mat DetectBarCodeInImage(Mat image)
+{
     Mat gray, gaus;
     Mat SobelX, SobelY, SobelOut;
     // 转化为灰度图
@@ -40,7 +43,7 @@ Mat DetectBarCodeInImage(Mat image){
     // imshow("腐蚀",Threshold);
 
     // 膨胀，填充条形码间空隙
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 5; ++i)
         dilate(Threshold, Threshold, element);
     // imshow("膨胀", Threshold);
 
@@ -50,4 +53,55 @@ Mat DetectBarCodeInImage(Mat image){
     // imshow("再做闭运算",Threshold);
 
     return Threshold;
+}
+
+/**
+ * @brief 对条形码画框,返回条形码裁减图
+ * @note 可返回未裁减图
+ */
+Mat DrawFrame4BarCode(Mat image, Mat mask)
+{
+    Mat resultImage;
+    Rect rect;
+    // 角点初始化
+    vector<vector<Point>> contours;
+    vector<Vec4i> hiera;
+
+    // 通过findContours找到条形码区域的矩形边界
+    findContours(mask, contours, hiera, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    for (int i = 0; i < contours.size(); i++)
+    {
+        rect = boundingRect((Mat)contours[i]);
+        rectangle(image, rect, Scalar(255, 0, 0), 2);
+    }
+
+    // 对带框图片裁减
+    resultImage = Mat(image, rect);
+    // 对带框图片深拷贝
+    // image.copyTo(resultImage);
+
+    // imshow("二维码矩形区域图像裁剪", resultImage);
+    return resultImage;
+}
+
+int GenerateMiddleYData(Mat image, uint8_t *ptrPx)
+{
+    Mat copy_img;
+    image.copyTo(copy_img);
+    threshold(copy_img, copy_img, 178, 255, CV_THRESH_BINARY);
+    int height = copy_img.rows;
+    int weight = copy_img.cols;
+    int nc = copy_img.channels();
+    // printf("通道数为%d\n",nc);
+
+    // 二维码中间必定是有数据的，把中间那条线经过的每个像素都记录到内存中
+    int middleHeight = height / 2;
+    for (int i = 0; i < weight; ++i)
+    {
+        memset(ptrPx + i, (uint8_t)copy_img.ptr<Vec3b>(middleHeight)[i][0], 1);
+        printf("%d, ", copy_img.ptr<Vec3b>(middleHeight)[i][0]);
+    }
+    memset(ptrPx + weight, 99, 1);
+    // printf("\n\n\n");
+    return 0;
 }

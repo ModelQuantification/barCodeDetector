@@ -6,7 +6,7 @@
 QT_BEGIN_NAMESPACE
 namespace Ui
 {
-class Widget;
+    class Widget;
 }
 QT_END_NAMESPACE
 

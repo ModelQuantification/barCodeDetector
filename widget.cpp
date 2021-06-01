@@ -11,6 +11,8 @@
 using namespace cv;
 using namespace std;
 
+int CameraStatus = 0;
+
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 {
     ui->setupUi(this);
@@ -23,6 +25,7 @@ Widget::~Widget()
 
 void Widget::on_openCamera_clicked()
 {
+    // 暂时不知道作用
     int WIDTH = 720;
     int HEIGHT = 480;
     int FPS = 30;
@@ -33,16 +36,23 @@ void Widget::on_openCamera_clicked()
         std::cout << "摄像头没连接";
     }
 
-    cv::Mat frame;
-    while (1)
+    CameraStatus = 1;
+    Mat frame;
+    Mat cvTempImg;
+    QImage qtShowImg;
+    while (CameraStatus)
     {
         capture >> frame;
-        imshow("读取视频", frame);
+        // 在QT中显示效果
+        cv::cvtColor(frame, cvTempImg, COLOR_BGR2RGB);
+        qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
+        ui->imgFrame->clear();
+        ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
+        ui->imgFrame->show();
         // ESC
         if (cv::waitKey(1) == 27)
             break;
     }
-    cv::destroyAllWindows();
 }
 
 void Widget::on_detectImage_clicked()
@@ -149,4 +159,6 @@ void Widget::on_detectBarCode_clicked()
 
 void Widget::on_closeCamera_clicked()
 {
+    CameraStatus = 0;
+    ui->imgFrame->clear();
 }

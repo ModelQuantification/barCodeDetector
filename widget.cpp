@@ -5,7 +5,7 @@
 #include "widget.h"
 #include "./ui_widget.h"
 #include "QFileDialog"
-
+#include "Python.h"
 #include "./User/ocv.h"
 
 using namespace cv;
@@ -55,6 +55,7 @@ void Widget::on_openCamera_clicked()
     }
 }
 
+string img_file_name;
 void Widget::on_detectImage_clicked()
 {
     QString imgName = QFileDialog::getOpenFileName(this, tr("open image file"), "./",
@@ -64,6 +65,7 @@ void Widget::on_detectImage_clicked()
     Mat originImg, barCodeMaskImg;
     Mat barCodeImg, framedBarCodeImg;
 
+    img_file_name = imgName.toStdString();
     originImg = imread(imgName.toStdString());
 
     barCodeMaskImg = DetectBarCodeInImage(originImg);
@@ -155,6 +157,17 @@ void Widget::on_detectImage_clicked()
 
 void Widget::on_detectBarCode_clicked()
 {
+    cout << img_file_name << std::endl;
+    Py_Initialize();
+    // 找不到这个Module
+    PyObject *pMoodule = PyImport_ImportModule("tencentsdk.py");
+    // PyObject *pFunDetectBarCode = PyObject_GetAttrString(pMoodule, "detectBarCode");
+    // PyObject *barCode_img_file_name = Py_BuildValue("s", img_file_name);
+    // PyObject *pyValue = PyEval_CallObject(pFunDetectBarCode, barCode_img_file_name);
+    // string barCodeNum;
+    // PyArg_Parse(pyValue,"s",&barCodeNum);
+    Py_Finalize();
+    // cout << barCodeNum << std::endl;
 }
 
 void Widget::on_closeCamera_clicked()

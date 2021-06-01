@@ -16,6 +16,8 @@ set(CMAKE_PREFIX_PATH /home/hi/Qt5.12.10/5.12.10/gcc_64)
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(PythonLibs 3.6 REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
 
 include_directories(User)
 file(GLOB_RECURSE SOURCES "User/*.*")
@@ -31,4 +33,4 @@ add_executable(barCodeDetector
   widget.ui
 )
 
-target_link_libraries(barCodeDetector PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS})
+target_link_libraries(barCodeDetector PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS} ${PYTHON_LIBRARIES})

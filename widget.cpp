@@ -167,9 +167,7 @@ void Widget::on_detectBarCode_clicked()
     // 设置module位置
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append('./')");
-    // 找不到这个Module
-    PyObject *pMooduleJson = PyImport_ImportModule("json");
-    PyObject *pMooduleTencentsdk = PyImport_ImportModule("tencentsdk");
+    PyObject *pMoodule = PyImport_ImportModule("tencentsdk");
     // PyObject *pFunDetectBarCode = PyObject_GetAttrString(pMoodule, "detectBarCode");
     // PyObject *barCode_img_file_name = Py_BuildValue("s", img_file_name);
     // PyObject *pyValue = PyEval_CallObject(pFunDetectBarCode, barCode_img_file_name);

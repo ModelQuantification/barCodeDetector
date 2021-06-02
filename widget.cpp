@@ -181,7 +181,7 @@ void Widget::on_detectBarCode_clicked()
         cout << "not found function detectBarCode" << endl;
         return;
     }
-    // 声明返回值
+    // 把参数转换为Python类型
     PyObject *barCode_img_file_dir = Py_BuildValue("s", img_file_dir);
     // 使用该方法(函数)并得到返回值
     PyObject *pyValue = PyEval_CallObject(pFunDetectBarCode, barCode_img_file_dir);

@@ -18,6 +18,7 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(PythonLibs 3.6 REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
+include_directories(".")
 
 include_directories(User)
 file(GLOB_RECURSE SOURCES "User/*.*")

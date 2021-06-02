@@ -159,8 +159,17 @@ void Widget::on_detectBarCode_clicked()
 {
     cout << img_file_name << std::endl;
     Py_Initialize();
+    if (!Py_IsInitialized())
+    {
+        cout << "Py_Initialize failed." << endl;
+        return;
+    }
+    // 设置module位置
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString("sys.path.append('./')");
     // 找不到这个Module
-    PyObject *pMoodule = PyImport_ImportModule("tencentsdk.py");
+    PyObject *pMooduleJson = PyImport_ImportModule("json");
+    PyObject *pMooduleTencentsdk = PyImport_ImportModule("tencentsdk");
     // PyObject *pFunDetectBarCode = PyObject_GetAttrString(pMoodule, "detectBarCode");
     // PyObject *barCode_img_file_name = Py_BuildValue("s", img_file_name);
     // PyObject *pyValue = PyEval_CallObject(pFunDetectBarCode, barCode_img_file_name);

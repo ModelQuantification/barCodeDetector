@@ -16,7 +16,8 @@ def detectBarCode(filename):
         # print(ret)  # 重新编码数据
 
     try:
-        cred = credential.Credential("AKIDifTjkYFTYNxYu8tQ4f4E9pRp2INEKSnl", "4KtGQN5YmmXJZ1FMGtHPIgsoIQIvIPM6")
+        cred = credential.Credential(
+            "AKIDifTjkYFTYNxYu8tQ4f4E9pRp2INEKSnl", "4KtGQN5YmmXJZ1FMGtHPIgsoIQIvIPM6")
         httpProfile = HttpProfile()
         httpProfile.endpoint = "ocr.tencentcloudapi.com"
 
@@ -35,12 +36,13 @@ def detectBarCode(filename):
         ret = json.loads(resp_str)
         data = ret["CodeResults"][0]["Url"]
         # print(resp_str)
-        # print(ret["CodeResults"][0]["Url"])
+        print(ret["CodeResults"][0]["Url"])
         return data
 
     except TencentCloudSDKException as err:
         print(err)
         return "0"
 
-# if __name__ == "__main__":
-#     pass
+
+if __name__ == "__main__":
+    detectBarCode("/home/hi/Downloads/barCode-shupian-s.jpg")

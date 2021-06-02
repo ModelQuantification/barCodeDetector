@@ -167,14 +167,18 @@ void Widget::on_detectBarCode_clicked()
     // 设置module位置
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append('./')");
+    // 打开模块
     PyObject *pMoodule = PyImport_ImportModule("tencentsdk");
-    // PyObject *pFunDetectBarCode = PyObject_GetAttrString(pMoodule, "detectBarCode");
-    // PyObject *barCode_img_file_name = Py_BuildValue("s", img_file_name);
-    // PyObject *pyValue = PyEval_CallObject(pFunDetectBarCode, barCode_img_file_name);
-    // string barCodeNum;
-    // PyArg_Parse(pyValue,"s",&barCodeNum);
+    // 打开模块的方法
+    PyObject *pFunDetectBarCode = PyObject_GetAttrString(pMoodule, "detectBarCode");
+    // 使用该方法
+    PyObject *barCode_img_file_name = Py_BuildValue("s", img_file_name);
+    // Get到返回值
+    PyObject *pyValue = PyEval_CallObject(pFunDetectBarCode, barCode_img_file_name);
+    string barCodeNum;
+    PyArg_Parse(pyValue, "s", &barCodeNum);
     Py_Finalize();
-    // cout << barCodeNum << std::endl;
+    cout << barCodeNum << std::endl;
 }
 
 void Widget::on_closeCamera_clicked()

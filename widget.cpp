@@ -189,6 +189,10 @@ void Widget::on_detectBarCode_clicked()
     PyArg_Parse(pyValue, "s", &barCodeNum);
     Py_Finalize();
     cout << barCodeNum << std::endl;
+    QString qstr = QString::fromStdString(barCodeNum);
+    ui->barCodeShow->clear();
+    ui->barCodeShow->setText(qstr);
+    ui->barCodeShow->setStyleSheet("color:green;");
 }
 
 void Widget::on_closeCamera_clicked()

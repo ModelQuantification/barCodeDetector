@@ -55,7 +55,7 @@ void Widget::on_openCamera_clicked()
     }
 }
 
-string img_file_name;
+string img_file_dir;
 void Widget::on_detectImage_clicked()
 {
     QString imgName = QFileDialog::getOpenFileName(this, tr("open image file"), "./",
@@ -65,7 +65,7 @@ void Widget::on_detectImage_clicked()
     Mat originImg, barCodeMaskImg;
     Mat barCodeImg, framedBarCodeImg;
 
-    img_file_name = imgName.toStdString();
+    img_file_dir = imgName.toStdString();
     originImg = imread(imgName.toStdString());
 
     barCodeMaskImg = DetectBarCodeInImage(originImg);
@@ -157,7 +157,7 @@ void Widget::on_detectImage_clicked()
 
 void Widget::on_detectBarCode_clicked()
 {
-    cout << img_file_name << std::endl;
+    cout << img_file_dir << std::endl;
     Py_Initialize();
     if (!Py_IsInitialized())
     {
@@ -168,13 +168,23 @@ void Widget::on_detectBarCode_clicked()
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append('./')");
     // 打开模块
-    PyObject *pMoodule = PyImport_ImportModule("tencentsdk");
+    PyObject *pModule = PyImport_ImportModule("tencentsdk");
+    if (pModule == NULL)
+    {
+        cout << "tencentsdk not found" << endl;
+        return;
+    }
     // 打开模块的方法
-    PyObject *pFunDetectBarCode = PyObject_GetAttrString(pMoodule, "detectBarCode");
-    // 使用该方法
-    PyObject *barCode_img_file_name = Py_BuildValue("s", img_file_name);
-    // Get到返回值
-    PyObject *pyValue = PyEval_CallObject(pFunDetectBarCode, barCode_img_file_name);
+    PyObject *pFunDetectBarCode = PyObject_GetAttrString(pModule, "detectBarCode");
+    if (!pFunDetectBarCode || !PyCallable_Check(pFunDetectBarCode))
+    {
+        cout << "not found function detectBarCode" << endl;
+        return;
+    }
+    // 声明返回值
+    PyObject *barCode_img_file_dir = Py_BuildValue("s", img_file_dir);
+    // 使用该方法(函数)并得到返回值
+    PyObject *pyValue = PyEval_CallObject(pFunDetectBarCode, barCode_img_file_dir);
     string barCodeNum;
     PyArg_Parse(pyValue, "s", &barCodeNum);
     Py_Finalize();

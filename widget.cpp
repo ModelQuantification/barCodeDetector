@@ -157,7 +157,7 @@ void Widget::on_detectImage_clicked()
 
 void Widget::on_detectBarCode_clicked()
 {
-    cout << img_file_dir << std::endl;
+    // cout << img_file_dir << std::endl;
     Py_Initialize();
     if (!Py_IsInitialized())
     {
@@ -182,13 +182,16 @@ void Widget::on_detectBarCode_clicked()
         return;
     }
     // 把参数转换为Python类型
-    PyObject *barCode_img_file_dir = Py_BuildValue("s", img_file_dir);
+    char *ptr_img_file_dir = (char *)img_file_dir.data();
+    PyObject *pArgs = PyTuple_New(1);
+    PyObject *barCode_img_file_dir = Py_BuildValue("s", ptr_img_file_dir);
+    PyTuple_SetItem(pArgs, 0, barCode_img_file_dir);
     // 使用该方法(函数)并得到返回值
-    PyObject *pyValue = PyEval_CallObject(pFunDetectBarCode, barCode_img_file_dir);
-    string barCodeNum;
+    PyObject *pyValue = PyEval_CallObject(pFunDetectBarCode, pArgs);
+    char *barCodeNum;
     PyArg_Parse(pyValue, "s", &barCodeNum);
     Py_Finalize();
-    cout << barCodeNum << std::endl;
+    printf("返回值：%s\n", barCodeNum);
     QString qstr = QString::fromStdString(barCodeNum);
     ui->barCodeShow->clear();
     ui->barCodeShow->setText(qstr);

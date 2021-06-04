@@ -12,6 +12,7 @@ using namespace cv;
 using namespace std;
 
 int CameraStatus = 0;
+string img_file_dir;
 
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 {
@@ -52,10 +53,10 @@ void Widget::on_openCamera_clicked()
         // ESC
         if (cv::waitKey(1) == 27)
             break;
+        // frame就是一个图片
     }
 }
 
-string img_file_dir;
 void Widget::on_detectImage_clicked()
 {
     QString imgName = QFileDialog::getOpenFileName(this, tr("open image file"), "./",

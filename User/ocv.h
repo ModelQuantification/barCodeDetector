@@ -11,3 +11,4 @@ using namespace std;
 Mat DetectBarCodeInImage(Mat image);
 Mat DrawFrame4BarCode(Mat image, Mat mask);
 int GenerateMiddleYData(Mat image, uint8_t *ptrPx);
+int FindBarCodeStart_EndPxInArray(uint8_t *array, int *barCodeStartPx, int *barCodeEndPx);

@@ -74,47 +74,15 @@ void Widget::on_detectImage_clicked()
     // 可以修改函数代码为裁减或带框
     barCodeImg = DrawFrame4BarCode(originImg, barCodeMaskImg);
 
-    // 读取条形码中间一行像素并返回
-    int ret;
-
     // 读取条形码宽度，把图片的宽度作为请求的内存大小
     int barCodeWeight = barCodeImg.cols;
     uint8_t *pWeight = (uint8_t *)malloc(barCodeWeight * sizeof(uint8_t) + 1);
     if (pWeight == NULL) // 如果请求不了内存
         return;
+
+    // 读取条形码中间一行像素并返回
+    int ret;
     ret = GenerateMiddleYData(barCodeImg, pWeight);
-
-    // 创建条形码图片存在信息的像素区间(起始和结束)
-    int barCodeStartPx = 0;
-    int barCodeEndPx = 0;
-    int barCodeStartPxFinded = 0;
-    // 找到开始位置和结束位置
-    if (0 == ret)
-    {
-        int i = 0;
-        while (*(pWeight + i) != 99)
-        {
-            // 判断第一个黑色像素
-            if (barCodeStartPxFinded == 0 && *(pWeight + i) == 0)
-            {
-                // 把黑色像素的位置打印出来
-                // printf("BarCodeStart: %d\n", i);
-                barCodeStartPxFinded = 1;
-                barCodeStartPx = i;
-            }
-
-            // 判断最后一个黑色像素, 但要注意一旦到最后一个就break掉
-            if (barCodeStartPxFinded && *(pWeight + i) == 255 && *(pWeight + i - 1) == 0)
-            {
-                // 把白色像素的位置打印出来
-                // printf("BarCodeEnd: %d\n", i);
-                barCodeEndPx = i - 1;
-            }
-            i++;
-        }
-        // printf("\n\n\n%d||%d\n", barCodeStartPx, barCodeEndPx);
-    }
-
     // unitTest 检验返回的内存是否正确
     // if (0 == ret)
     // {
@@ -125,6 +93,23 @@ void Widget::on_detectImage_clicked()
     //         i++;
     //     }
     // }
+
+    // 创建条形码图片存在信息的像素区间(起始和结束)
+    int barCodeStartPx = 0;
+    int barCodeEndPx = 0;
+
+    // 找到开始位置和结束位置
+    if (0 == ret)
+    {
+        ret = FindBarCodeStart_EndPxInArray(pWeight, &barCodeStartPx, &barCodeEndPx);
+    }
+    // printf("%d %d", barCodeStartPx, barCodeEndPx);
+
+    // 开始对指定开始和结尾的二维码数组进行解码
+    if (0 == ret)
+    {
+        // TODO
+    }
 
     // 在QT中显示效果
     Mat cvTempImg;
@@ -179,7 +164,7 @@ void Widget::on_detectBarCode_clicked()
     char *barCodeNum;
     PyArg_Parse(pyValue, "s", &barCodeNum);
     Py_Finalize();
-    printf("返回值：%s\n", barCodeNum);
+    // printf("返回值：%s\n", barCodeNum);
     QString qstr = QString::fromStdString(barCodeNum);
     ui->barCodeShow->clear();
     ui->barCodeShow->setText(qstr);

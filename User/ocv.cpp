@@ -99,9 +99,37 @@ int GenerateMiddleYData(Mat image, uint8_t *ptrPx)
     for (int i = 0; i < weight; ++i)
     {
         memset(ptrPx + i, (uint8_t)copy_img.ptr<Vec3b>(middleHeight)[i][0], 1);
-        printf("%d, ", copy_img.ptr<Vec3b>(middleHeight)[i][0]);
+        // printf("%d, ", copy_img.ptr<Vec3b>(middleHeight)[i][0]);
     }
     memset(ptrPx + weight, 99, 1);
     // printf("\n\n\n");
     return 0;
+}
+
+int FindBarCodeStart_EndPxInArray(uint8_t *array, int *barCodeStartPx, int *barCodeEndPx)
+{
+        int i = 0;
+        int barCodeStartPxFinded = 0;
+        while (*(array + i) != 99)
+        {
+            // 判断第一个黑色像素
+            if (barCodeStartPxFinded == 0 && *(array + i) == 0)
+            {
+                // 把黑色像素的位置打印出来
+                // printf("BarCodeStart: %d\n", i);
+                barCodeStartPxFinded = 1;
+                *barCodeStartPx = i;
+            }
+
+            // 判断最后一个黑色像素, 但要注意一旦到最后一个就break掉
+            if (barCodeStartPxFinded && *(array + i) == 255 && *(array + i - 1) == 0)
+            {
+                // 把白色像素的位置打印出来
+                // printf("BarCodeEnd: %d\n", i);
+                *barCodeEndPx = i - 1;
+            }
+            i++;
+        }
+        // printf("\n\n\n%d||%d\n", *barCodeStartPx, *barCodeEndPx);
+        return 0;
 }

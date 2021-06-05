@@ -103,7 +103,15 @@ void Widget::on_detectImage_clicked()
     {
         ret = FindBarCodeStart_EndPxInArray(pWeight, &barCodeStartPx, &barCodeEndPx);
     }
-    // printf("%d %d", barCodeStartPx, barCodeEndPx);
+    // printf("%d %d\n", barCodeStartPx, barCodeEndPx);
+    // printf("%d %d\n", *(pWeight + barCodeStartPx), *(pWeight + barCodeEndPx));
+
+    // 条形码开始到结尾的长度
+    int barCodeLen = barCodeEndPx - barCodeStartPx + 1;
+    printf("%d\n", barCodeLen);
+    // 条形码有效信息间隔
+    float payLoadInterval = barCodeLen / 95.0;
+    printf("%f\n", payLoadInterval - 1); // -1才能输出间隔的像素
 
     // 开始对指定开始和结尾的二维码数组进行解码
     if (0 == ret)

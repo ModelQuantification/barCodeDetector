@@ -84,6 +84,9 @@ Mat DrawFrame4BarCode(Mat image, Mat mask)
     return resultImage;
 }
 
+/**
+ * @brief 获取到中间一行像素的二值化像素值
+ */
 int GenerateMiddleYData(Mat image, uint8_t *ptrPx)
 {
     Mat copy_img;
@@ -106,6 +109,9 @@ int GenerateMiddleYData(Mat image, uint8_t *ptrPx)
     return 0;
 }
 
+/**
+ * @brief 在数组中找到条形码开始和结尾的Index
+ */
 int FindBarCodeStart_EndPxInArray(uint8_t *array, int *barCodeStartPx, int *barCodeEndPx)
 {
         int i = 0;

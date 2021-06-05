@@ -87,45 +87,32 @@ void Widget::on_detectImage_clicked()
     // 创建条形码图片存在信息的像素区间(起始和结束)
     int barCodeStartPx = 0;
     int barCodeEndPx = 0;
+    int barCodeStartPxFinded = 0;
     // 找到开始位置和结束位置
     if (0 == ret)
     {
         int i = 0;
         while (*(pWeight + i) != 99)
         {
-            // TODO *(pWeight + i - 1) 向前溢出
             // 判断第一个黑色像素
-            // if (*(pWeight + i) == 0 && *(pWeight + i - 1) == 255)
-            if (*(pWeight + i) == 0)
+            if (barCodeStartPxFinded == 0 && *(pWeight + i) == 0)
             {
                 // 把黑色像素的位置打印出来
-                // printf("%d",i);
+                // printf("BarCodeStart: %d\n", i);
+                barCodeStartPxFinded = 1;
                 barCodeStartPx = i;
-                // 当
-                // if (i < barCodeStartPx || barCodeStartPx != 0)
-                // {
-                //     barCodeStartPx = i;
-                // }
             }
 
             // 判断最后一个黑色像素, 但要注意一旦到最后一个就break掉
-            // if (*(pWeight + i) == 255 && *(pWeight + i - 1) == 0)
-            if (*(pWeight + i) == 255)
+            if (barCodeStartPxFinded && *(pWeight + i) == 255 && *(pWeight + i - 1) == 0)
             {
                 // 把白色像素的位置打印出来
-                // printf("%d",i);
-                barCodeEndPx = i;
-                // 当
-                // if (i < barCodeEndPx || barCodeEndPx != 0)
-                // {
-                //     barCodeEndPx = i - 1;
-                //     break;
-                // }
+                // printf("BarCodeEnd: %d\n", i);
+                barCodeEndPx = i - 1;
             }
             i++;
         }
-        printf("\n\n\n");
-        printf("%d||%d\n", barCodeStartPx, barCodeEndPx);
+        // printf("\n\n\n%d||%d\n", barCodeStartPx, barCodeEndPx);
     }
 
     // unitTest 检验返回的内存是否正确

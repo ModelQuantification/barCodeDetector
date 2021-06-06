@@ -18,7 +18,7 @@ jobs:
       uses: jurplel/install-qt-action@v2
       with:
           version: 5.12.10
-          dir: /usr/local
+          dir: ${{ github.workspace }}/qtApp/
 
     - name: OpenCV
       uses: Dovyski/setup-opencv-action@v1

@@ -11,7 +11,9 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_PREFIX_PATH /home/hi/Qt5.12.10/5.12.10/gcc_64)
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}
+                      ${GITHUB_WORKSPACE}/qtApp/Qt/5.12.10/5.12.10/gcc_64
+                      /home/hi/Qt5.12.10/5.12.10/gcc_64)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)

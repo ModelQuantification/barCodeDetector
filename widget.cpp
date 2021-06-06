@@ -140,11 +140,17 @@ void Widget::on_detectImage_clicked()
     //     int i = 0;
     //     while (*(pCodeInfo + i) != 99)
     //     {
-    //         printf("%d\n", *(pCodeInfo + i));
+    //         // 这里数组和指针找数据都可以混用
+    //         // printf("%d\n", *(pCodeInfo + i));
+    //         printf("%d\n", pCodeInfo[i]);
     //         i++;
     //     }
     //     printf("%d", i);
     // }
+
+    // CodeInfo 2 barCodeNumber
+    uint8_t barCodeNumber[13] = {0};
+    codeInfo2BarCodeNumber(pCodeInfo, barCodeNumber);
 
     // 在QT中显示效果
     Mat cvTempImg;

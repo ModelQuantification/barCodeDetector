@@ -108,16 +108,43 @@ void Widget::on_detectImage_clicked()
 
     // 条形码开始到结尾的长度
     int barCodeLen = barCodeEndPx - barCodeStartPx + 1;
-    printf("%d\n", barCodeLen);
+    // printf("%d\n", barCodeLen);
     // 条形码有效信息间隔
     float payLoadInterval = barCodeLen / 95.0;
-    printf("%f\n", payLoadInterval - 1); // -1才能输出间隔的像素
+    // printf("%f\n", payLoadInterval);
 
     // 开始对指定开始和结尾的二维码数组进行解码
-    if (0 == ret)
+    // 把条形码每个存在信息的数据填入pCodeInfo中
+    uint8_t *pCodeInfo = (uint8_t *)malloc(95 * sizeof(uint8_t) + 1);
+    if (pCodeInfo == NULL) // 如果请求不了内存
+        return;
+    float temp;
+    *(pCodeInfo + 95) = 99;
+    for (int i = 0; i < 95; i++)
     {
-        // TODO
+        temp = i * payLoadInterval;
+        if (temp - (int)temp < 0.5) // 当间隔小数点后比5小舍去
+        {
+            // printf("%f\n", temp - (int)temp);
+            *(pCodeInfo + i) = *(pWeight + barCodeStartPx + (int)temp);
+        }
+        else // 四舍五入
+        {
+            // printf("%f\n", temp - (int)temp);
+            *(pCodeInfo + i) = *(pWeight + barCodeStartPx + (int)temp + 1);
+        }
     }
+    // unitTest 检验返回的内存是否正确
+    // if (0 == ret)
+    // {
+    //     int i = 0;
+    //     while (*(pCodeInfo + i) != 99)
+    //     {
+    //         printf("%d\n", *(pCodeInfo + i));
+    //         i++;
+    //     }
+    //     printf("%d", i);
+    // }
 
     // 在QT中显示效果
     Mat cvTempImg;
@@ -131,6 +158,10 @@ void Widget::on_detectImage_clicked()
     // 释放条形码宽度指针
     free(pWeight);
     pWeight = NULL;
+
+    // 释放条形码信息指针
+    free(pCodeInfo);
+    pCodeInfo = NULL;
 
     // 当没有imshow时关闭waitKey
     waitKey();

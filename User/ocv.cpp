@@ -145,14 +145,14 @@ int FindBarCodeStart_EndPxInArray(uint8_t *array, int *barCodeStartPx, int *barC
  */
 int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
 {
-    int now_index, temp; //i循环6次；a95位数组的位数
+    int nowIndex, temp; //i循环6次；a95位数组的位数
     int index = 0;
     // -----------
     int num[7], num_flag, barCodeUnit;
     // 前三位101
-    for (now_index = 0; now_index < 3; now_index++)
+    for (nowIndex = 0; nowIndex < 3; nowIndex++)
     {
-        // printf("%d ", pCodeInfo[now_index]);
+        // printf("%d ", pCodeInfo[nowIndex]);
     }
     // printf("\n");
 
@@ -161,10 +161,10 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     {
         num_flag = 0;
         barCodeUnit = 0;
-        for (now_index = 3 + index; now_index < 10 + index; now_index++)
+        for (nowIndex = 3 + index; nowIndex < 10 + index; nowIndex++)
         {
-            // printf("%d ", pCodeInfo[now_index]);
-            num[num_flag] = pCodeInfo[now_index];
+            // printf("%d ", pCodeInfo[nowIndex]);
+            num[num_flag] = pCodeInfo[nowIndex];
             // printf("%d ", num[num_flag]);
             num_flag++;
         }
@@ -179,9 +179,9 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     }
 
     // 中间分隔符
-    for (now_index = 45; now_index < 50; now_index++)
+    for (nowIndex = 45; nowIndex < 50; nowIndex++)
     {
-        // printf("%d ", pCodeInfo[now_index]);
+        // printf("%d ", pCodeInfo[nowIndex]);
     }
     // printf("\n");
 
@@ -189,18 +189,18 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     index = 0;
     for (temp = 0; temp <= 5; temp++)
     {
-        for (now_index = 50 + index; now_index < 57 + index; now_index++)
+        for (nowIndex = 50 + index; nowIndex < 57 + index; nowIndex++)
         {
-            // printf("%d ", pCodeInfo[now_index]);
+            // printf("%d ", pCodeInfo[nowIndex]);
         }
         index = index + 7;
         // printf("\n");
     }
 
     // 后三位101
-    for (now_index = 92; now_index < 95; now_index++)
+    for (nowIndex = 92; nowIndex < 95; nowIndex++)
     {
-        // printf("%d ", pCodeInfo[now_index]);
+        // printf("%d ", pCodeInfo[nowIndex]);
     }
 
     return 0;

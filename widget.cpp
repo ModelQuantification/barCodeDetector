@@ -60,7 +60,7 @@ void Widget::on_openCamera_clicked()
 void Widget::on_detectImage_clicked()
 {
     QString imgName = QFileDialog::getOpenFileName(this, tr("open image file"), "./",
-                      tr("Image files(*.png *.jpg);;All files (*.*)"));
+                                                   tr("Image files(*.png *.jpg);;All files (*.*)"));
     if (imgName.isEmpty())
         return;
     Mat originImg, barCodeMaskImg;
@@ -105,6 +105,10 @@ void Widget::on_detectImage_clicked()
     }
     // printf("%d %d\n", barCodeStartPx, barCodeEndPx);
     // printf("%d %d\n", *(pWeight + barCodeStartPx), *(pWeight + barCodeEndPx));
+
+    // 方法选择
+    int methodFlag = ui->comboBox->currentIndex();
+    // printf("使用方法: %d\n", methodFlag);
 
     // 条形码开始到结尾的长度
     int barCodeLen = barCodeEndPx - barCodeStartPx + 1;
@@ -151,7 +155,7 @@ void Widget::on_detectImage_clicked()
     // 黑色从0变成结果1/白色从255变成0
     for (int i = 0; i < 95; i++)
     {
-        if(*(pCodeInfo + i) == 255)
+        if (*(pCodeInfo + i) == 255)
             *(pCodeInfo + i) = 0;
         else
             *(pCodeInfo + i) = 1;
@@ -233,5 +237,5 @@ void Widget::on_closeCamera_clicked()
 
 void Widget::on_comboBox_currentIndexChanged(int index)
 {
-    
+    index = ui->comboBox->currentIndex();
 }

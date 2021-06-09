@@ -1,6 +1,6 @@
 # barCodeDetector  
 机器视觉大作业，菜鸟驿站条形码识别实现  
-![Build](https://github.com/WangShuoran/barCodeDetector/actions/workflows/cmake.yml/badge.svg)![ScanCode](https://github.com/WangShuoran/barCodeDetector/actions/workflows/codeql-analysis.yml/badge.svg)  
+![Build](https://github.com/WangShuoran/barCodeDetector/actions/workflows/cmake.yml/badge.svg) ![ScanCode](https://github.com/WangShuoran/barCodeDetector/actions/workflows/codeql-analysis.yml/badge.svg)  
 
 # 实现方式  
 本项目使用多种实现方式完成条形码提取、检测、解码  

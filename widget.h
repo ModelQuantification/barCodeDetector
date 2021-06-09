@@ -28,6 +28,8 @@ private slots:
 
     void on_closeCamera_clicked();
 
+    void on_comboBox_currentIndexChanged(int index);
+
 private:
     Ui::Widget *ui;
 };

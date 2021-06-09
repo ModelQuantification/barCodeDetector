@@ -101,6 +101,26 @@
     <string/>
    </property>
   </widget>
+  <widget class="QComboBox" name="comboBox">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>600</y>
+     <width>141</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>1-跳跃法识别</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>2-双边宽度比识别</string>
+    </property>
+   </item>
+  </widget>
  </widget>
  <resources/>
  <connections/>

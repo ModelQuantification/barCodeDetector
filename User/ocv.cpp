@@ -145,5 +145,63 @@ int FindBarCodeStart_EndPxInArray(uint8_t *array, int *barCodeStartPx, int *barC
  */
 int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
 {
+    int now_index, temp; //i循环6次；a95位数组的位数
+    int index = 0;
+    // -----------
+    int num[7], num_flag, barCodeUnit;
+    // 前三位101
+    for (now_index = 0; now_index < 3; now_index++)
+    {
+        // printf("%d ", pCodeInfo[now_index]);
+    }
+    // printf("\n");
+
+    // 前面有效信息
+    for (temp = 0; temp < 6; temp++)
+    {
+        num_flag = 0;
+        for (now_index = 3 + index; now_index < 10 + index; now_index++)
+        {
+            // printf("%d ", pCodeInfo[now_index]);
+            num[num_flag] = pCodeInfo[now_index];
+            printf("%d ", num[num_flag]);
+            num_flag++;
+        }
+        // int[] -> int
+        for (int i = 0; i < 7; i++)
+        {
+            // TODO error
+            barCodeUnit += num[num_flag] * 10;
+        }
+        printf("%d", barCodeUnit);
+        index = index + 7;
+        printf("\n");
+    }
+
+    // 中间分隔符
+    for (now_index = 45; now_index < 50; now_index++)
+    {
+        // printf("%d ", pCodeInfo[now_index]);
+    }
+    // printf("\n");
+
+    // 后面的有效信息
+    index = 0;
+    for (temp = 0; temp <= 5; temp++)
+    {
+        for (now_index = 50 + index; now_index < 57 + index; now_index++)
+        {
+            // printf("%d ", pCodeInfo[now_index]);
+        }
+        index = index + 7;
+        // printf("\n");
+    }
+
+    // 后三位101
+    for (now_index = 92; now_index < 95; now_index++)
+    {
+        printf("%d ", pCodeInfo[now_index]);
+    }
+
     return 0;
 }

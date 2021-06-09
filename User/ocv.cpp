@@ -160,20 +160,20 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     for (temp = 0; temp < 6; temp++)
     {
         num_flag = 0;
+        barCodeUnit = 0;
         for (now_index = 3 + index; now_index < 10 + index; now_index++)
         {
             // printf("%d ", pCodeInfo[now_index]);
             num[num_flag] = pCodeInfo[now_index];
-            printf("%d ", num[num_flag]);
+            // printf("%d ", num[num_flag]);
             num_flag++;
         }
         // int[] -> int
         for (int i = 0; i < 7; i++)
         {
-            // TODO error
-            barCodeUnit += num[num_flag] * 10;
+            barCodeUnit = barCodeUnit * 10 + num[i];
         }
-        printf("%d", barCodeUnit);
+        printf("%07d", barCodeUnit);
         index = index + 7;
         printf("\n");
     }
@@ -200,7 +200,7 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     // 后三位101
     for (now_index = 92; now_index < 95; now_index++)
     {
-        printf("%d ", pCodeInfo[now_index]);
+        // printf("%d ", pCodeInfo[now_index]);
     }
 
     return 0;

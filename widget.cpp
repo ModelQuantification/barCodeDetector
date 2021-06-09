@@ -148,6 +148,15 @@ void Widget::on_detectImage_clicked()
     //     printf("%d", i);
     // }
 
+    // 黑色从0变成结果1/白色从255变成0
+    for (int i = 0; i < 95; i++)
+    {
+        if(*(pCodeInfo+i)==255)
+            *(pCodeInfo+i) = 0;
+        else
+            *(pCodeInfo+i) = 1;
+    }
+    
     // CodeInfo 2 barCodeNumber
     uint8_t barCodeNumber[13] = {0};
     codeInfo2BarCodeNumber(pCodeInfo, barCodeNumber);

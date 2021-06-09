@@ -3,6 +3,8 @@ name: CMake
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v0.1-alpha'
 
 env:
   BUILD_TYPE: Release
@@ -38,3 +40,23 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}}
+
+    - name: Release
+      uses: monkeyWie/create-release@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+        uses: actions/upload-release-asset@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{github.workspace}}/build
+          asset_name: ${{env.BUILD_TYPE}}
+          asset_content_type: application/out

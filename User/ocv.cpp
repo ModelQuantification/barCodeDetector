@@ -149,8 +149,12 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     int nowIndex, temp; //i循环6次；a95位数组的位数
     int index = 0;
     // -----------
-    int num[7], num_flag, barCodeUnit;
+    // 条形码每位由7位二进制组成，组成标志位，7位二进制由1个int表示
+    int barCodeUnitCompose[7], unitComposeNumFlag, barCodeUnit;
+
+    // 存放getBarCodeData生成的数据
     vector<int> barCodeData;
+
     // 前三位101
     for (nowIndex = 0; nowIndex < 3; nowIndex++)
     {
@@ -161,22 +165,29 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     // 前面有效信息
     for (temp = 0; temp < 6; temp++)
     {
-        num_flag = 0;
+        unitComposeNumFlag = 0;
         barCodeUnit = 0;
         for (nowIndex = 3 + index; nowIndex < 10 + index; nowIndex++)
         {
             // printf("%d ", pCodeInfo[nowIndex]);
-            num[num_flag] = pCodeInfo[nowIndex];
-            // printf("%d ", num[num_flag]);
-            num_flag++;
+            barCodeUnitCompose[unitComposeNumFlag] = pCodeInfo[nowIndex];
+            // printf("%d ", barCodeUnitCompose[unitComposeNumFlag]);
+            unitComposeNumFlag++;
         }
-        // int[] -> int
+        // 7位二进制数组成的数组转为1位条形码
         for (int i = 0; i < 7; i++)
         {
-            barCodeUnit = barCodeUnit * 10 + num[i];
+            barCodeUnit = barCodeUnit * 10 + barCodeUnitCompose[i];
         }
-        printf("%07d\n", barCodeUnit);
+
+        // 显示7位转为1位条形码结果
+        // printf("%07d\n", barCodeUnit);
+
         barCodeData = getBarCodeData(barCodeUnit);
+
+        // 这里开始把每个数据做提取
+        printf("%d\n", barCodeData[0]);
+
         index = index + 7;
         // printf("\n");
     }
@@ -335,6 +346,8 @@ vector<int> getBarCodeData(int barCodeUnit)
     case 1110100:
         barCodeData.push_back(9);
         break;
+    default:
+        barCodeData.push_back(-1);
     }
     return barCodeData;
 }

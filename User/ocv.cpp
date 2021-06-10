@@ -150,7 +150,7 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     int index = 0;
     // -----------
     int num[7], num_flag, barCodeUnit;
-    int barCodeNum;
+    vector<int> barCodeData;
     // 前三位101
     for (nowIndex = 0; nowIndex < 3; nowIndex++)
     {
@@ -176,8 +176,7 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
             barCodeUnit = barCodeUnit * 10 + num[i];
         }
         printf("%07d\n", barCodeUnit);
-        barCodeNum = getBarCodeNum(barCodeUnit);
-        printf("%d\n", barCodeNum);
+        barCodeData = getBarCodeData(barCodeUnit);
         index = index + 7;
         // printf("\n");
     }
@@ -214,125 +213,128 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
  * @brief 通过7位数字解析出1位数字
  * @author Ziyi Cheng
  */
-int getBarCodeNum(int barCodeUnit)
+vector<int> getBarCodeData(int barCodeUnit)
 {
+    // 创建一个条形码单元的信息容器
+    // 第一个数据存条形码单元Num，第二个数据存条形码单元奇偶
+    vector<int> barCodeData;
     switch (barCodeUnit)
     {
-    //a组(奇数)
+    // a组(奇数)
     case 1101:
-        printf("0\n");
-        printf("0\n");
+        barCodeData.push_back(0);
+        barCodeData.push_back(0);
         break;
     case 11001:
-        printf("1\n");
-        printf("0\n");
+        barCodeData.push_back(1);
+        barCodeData.push_back(0);
         break;
     case 10011:
-        printf("2\n");
-        printf("0\n");
+        barCodeData.push_back(2);
+        barCodeData.push_back(0);
         break;
     case 111101:
-        printf("3\n");
-        printf("0\n");
+        barCodeData.push_back(3);
+        barCodeData.push_back(0);
         break;
     case 100011:
-        printf("4\n");
-        printf("0\n");
+        barCodeData.push_back(4);
+        barCodeData.push_back(0);
         break;
     case 110001:
-        printf("5\n");
-        printf("0\n");
+        barCodeData.push_back(5);
+        barCodeData.push_back(0);
         break;
     case 101111:
-        printf("6\n");
-        printf("0\n");
+        barCodeData.push_back(6);
+        barCodeData.push_back(0);
         break;
     case 111011:
-        printf("7\n");
-        printf("0\n");
+        barCodeData.push_back(7);
+        barCodeData.push_back(0);
         break;
     case 110111:
-        printf("8\n");
-        printf("0\n");
+        barCodeData.push_back(8);
+        barCodeData.push_back(0);
         break;
     case 1011:
-        printf("9\n");
-        printf("0\n");
+        barCodeData.push_back(9);
+        barCodeData.push_back(0);
         break;
 
-    //b组（偶数）
+    // b组(偶数)
     case 100111:
-        printf("0\n");
-        printf("1\n");
+        barCodeData.push_back(0);
+        barCodeData.push_back(1);
         break;
     case 110011:
-        printf("1\n");
-        printf("1\n");
+        barCodeData.push_back(1);
+        barCodeData.push_back(1);
         break;
     case 11011:
-        printf("2\n");
-        printf("1\n");
+        barCodeData.push_back(2);
+        barCodeData.push_back(1);
         break;
     case 100001:
-        printf("3\n");
-        printf("1\n");
+        barCodeData.push_back(3);
+        barCodeData.push_back(1);
         break;
     case 11101:
-        printf("4\n");
-        printf("1\n");
+        barCodeData.push_back(4);
+        barCodeData.push_back(1);
         break;
     case 111001:
-        printf("5\n");
-        printf("1\n");
+        barCodeData.push_back(5);
+        barCodeData.push_back(1);
         break;
     case 101:
-        printf("6\n");
-        printf("1\n");
+        barCodeData.push_back(6);
+        barCodeData.push_back(1);
         break;
     case 10001:
-        printf("7\n");
-        printf("1\n");
+        barCodeData.push_back(7);
+        barCodeData.push_back(1);
         break;
     case 1001:
-        printf("8\n");
-        printf("1\n");
+        barCodeData.push_back(8);
+        barCodeData.push_back(1);
         break;
     case 10111:
-        printf("9\n");
-        printf("1\n");
+        barCodeData.push_back(9);
+        barCodeData.push_back(1);
         break;
 
-    //c组
+    // c组
     case 1110010:
-        printf("0\n");
+        barCodeData.push_back(0);
         break;
     case 1100110:
-        printf("1\n");
+        barCodeData.push_back(1);
         break;
     case 1101100:
-        printf("2\n");
+        barCodeData.push_back(2);
         break;
     case 1000010:
-        printf("3\n");
+        barCodeData.push_back(3);
         break;
     case 1011100:
-        printf("4\n");
+        barCodeData.push_back(4);
         break;
     case 1001110:
-        printf("5\n");
+        barCodeData.push_back(5);
         break;
     case 1010000:
-        printf("6\n");
+        barCodeData.push_back(6);
         break;
     case 1000100:
-        printf("7\n");
+        barCodeData.push_back(7);
         break;
     case 1001000:
-        printf("8\n");
+        barCodeData.push_back(8);
         break;
     case 1110100:
-        printf("9\n");
+        barCodeData.push_back(9);
         break;
     }
-    return 0;
+    return barCodeData;
 }

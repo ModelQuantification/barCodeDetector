@@ -74,6 +74,9 @@ void Widget::on_detectImage_clicked()
     // 可以修改函数代码为裁减或带框
     barCodeImg = DrawFrame4BarCode(originImg, barCodeMaskImg);
 
+    // unitTest 不框测试
+    // barCodeImg = originImg;
+
     // 读取条形码宽度，把图片的宽度作为请求的内存大小
     int barCodeWeight = barCodeImg.cols;
     uint8_t *pWeight = (uint8_t *)malloc(barCodeWeight * sizeof(uint8_t) + 1);

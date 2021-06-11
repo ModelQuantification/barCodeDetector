@@ -153,7 +153,7 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     int barCodeUnitCompose[7], unitComposeNumFlag, barCodeUnit;
 
     // 存放getBarCodeData生成的数据
-    vector<int> barCodeData;
+    vector<int> barCodeUnitData;
 
     // 前三位101
     for (nowIndex = 0; nowIndex < 3; nowIndex++)
@@ -167,6 +167,7 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     {
         unitComposeNumFlag = 0;
         barCodeUnit = 0;
+
         for (nowIndex = 3 + index; nowIndex < 10 + index; nowIndex++)
         {
             // printf("%d ", pCodeInfo[nowIndex]);
@@ -174,6 +175,7 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
             // printf("%d ", barCodeUnitCompose[unitComposeNumFlag]);
             unitComposeNumFlag++;
         }
+
         // 7位二进制数组成的数组转为1位条形码
         for (int i = 0; i < 7; i++)
         {
@@ -183,10 +185,11 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
         // 显示7位转为1位条形码结果
         // printf("%07d\n", barCodeUnit);
 
-        barCodeData = getBarCodeData(barCodeUnit);
+        barCodeUnitData = getBarCodeData(barCodeUnit);
 
-        // 这里开始把每个数据做提取
-        printf("%d\n", barCodeData[0]);
+        // 这里开始把每个数据做提取, 并放入barCodeNumber中
+        // printf("%d\n", barCodeUnitData[0]);
+        barCodeNumber[temp] = barCodeUnitData[0];
 
         index = index + 7;
         // printf("\n");
@@ -203,10 +206,32 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     index = 0;
     for (temp = 0; temp <= 5; temp++)
     {
+        unitComposeNumFlag = 0;
+        barCodeUnit = 0;
+
         for (nowIndex = 50 + index; nowIndex < 57 + index; nowIndex++)
         {
             // printf("%d ", pCodeInfo[nowIndex]);
+            barCodeUnitCompose[unitComposeNumFlag] = pCodeInfo[nowIndex];
+            // printf("%d ", barCodeUnitCompose[unitComposeNumFlag]);
+            unitComposeNumFlag++;
         }
+
+        // 7位二进制数组成的数组转为1位条形码
+        for (int i = 0; i < 7; i++)
+        {
+            barCodeUnit = barCodeUnit * 10 + barCodeUnitCompose[i];
+        }
+
+        // 显示7位转为1位条形码结果
+        // printf("%07d\n", barCodeUnit);
+
+        barCodeUnitData = getBarCodeData(barCodeUnit);
+
+        // 这里开始把每个数据做提取, 并放入barCodeNumber中
+        // printf("%d\n", barCodeUnitData[0]);
+        barCodeNumber[temp+7] = barCodeUnitData[0];
+
         index = index + 7;
         // printf("\n");
     }
@@ -228,126 +253,126 @@ vector<int> getBarCodeData(int barCodeUnit)
 {
     // 创建一个条形码单元的信息容器
     // 第一个数据存条形码单元Num，第二个数据存条形码单元奇偶
-    vector<int> barCodeData;
+    vector<int> barCodeUnitData;
     switch (barCodeUnit)
     {
     // a组(奇数)
     case 1101:
-        barCodeData.push_back(0);
-        barCodeData.push_back(0);
+        barCodeUnitData.push_back(0);
+        barCodeUnitData.push_back(0);
         break;
     case 11001:
-        barCodeData.push_back(1);
-        barCodeData.push_back(0);
+        barCodeUnitData.push_back(1);
+        barCodeUnitData.push_back(0);
         break;
     case 10011:
-        barCodeData.push_back(2);
-        barCodeData.push_back(0);
+        barCodeUnitData.push_back(2);
+        barCodeUnitData.push_back(0);
         break;
     case 111101:
-        barCodeData.push_back(3);
-        barCodeData.push_back(0);
+        barCodeUnitData.push_back(3);
+        barCodeUnitData.push_back(0);
         break;
     case 100011:
-        barCodeData.push_back(4);
-        barCodeData.push_back(0);
+        barCodeUnitData.push_back(4);
+        barCodeUnitData.push_back(0);
         break;
     case 110001:
-        barCodeData.push_back(5);
-        barCodeData.push_back(0);
+        barCodeUnitData.push_back(5);
+        barCodeUnitData.push_back(0);
         break;
     case 101111:
-        barCodeData.push_back(6);
-        barCodeData.push_back(0);
+        barCodeUnitData.push_back(6);
+        barCodeUnitData.push_back(0);
         break;
     case 111011:
-        barCodeData.push_back(7);
-        barCodeData.push_back(0);
+        barCodeUnitData.push_back(7);
+        barCodeUnitData.push_back(0);
         break;
     case 110111:
-        barCodeData.push_back(8);
-        barCodeData.push_back(0);
+        barCodeUnitData.push_back(8);
+        barCodeUnitData.push_back(0);
         break;
     case 1011:
-        barCodeData.push_back(9);
-        barCodeData.push_back(0);
+        barCodeUnitData.push_back(9);
+        barCodeUnitData.push_back(0);
         break;
 
     // b组(偶数)
     case 100111:
-        barCodeData.push_back(0);
-        barCodeData.push_back(1);
+        barCodeUnitData.push_back(0);
+        barCodeUnitData.push_back(1);
         break;
     case 110011:
-        barCodeData.push_back(1);
-        barCodeData.push_back(1);
+        barCodeUnitData.push_back(1);
+        barCodeUnitData.push_back(1);
         break;
     case 11011:
-        barCodeData.push_back(2);
-        barCodeData.push_back(1);
+        barCodeUnitData.push_back(2);
+        barCodeUnitData.push_back(1);
         break;
     case 100001:
-        barCodeData.push_back(3);
-        barCodeData.push_back(1);
+        barCodeUnitData.push_back(3);
+        barCodeUnitData.push_back(1);
         break;
     case 11101:
-        barCodeData.push_back(4);
-        barCodeData.push_back(1);
+        barCodeUnitData.push_back(4);
+        barCodeUnitData.push_back(1);
         break;
     case 111001:
-        barCodeData.push_back(5);
-        barCodeData.push_back(1);
+        barCodeUnitData.push_back(5);
+        barCodeUnitData.push_back(1);
         break;
     case 101:
-        barCodeData.push_back(6);
-        barCodeData.push_back(1);
+        barCodeUnitData.push_back(6);
+        barCodeUnitData.push_back(1);
         break;
     case 10001:
-        barCodeData.push_back(7);
-        barCodeData.push_back(1);
+        barCodeUnitData.push_back(7);
+        barCodeUnitData.push_back(1);
         break;
     case 1001:
-        barCodeData.push_back(8);
-        barCodeData.push_back(1);
+        barCodeUnitData.push_back(8);
+        barCodeUnitData.push_back(1);
         break;
     case 10111:
-        barCodeData.push_back(9);
-        barCodeData.push_back(1);
+        barCodeUnitData.push_back(9);
+        barCodeUnitData.push_back(1);
         break;
 
     // c组
     case 1110010:
-        barCodeData.push_back(0);
+        barCodeUnitData.push_back(0);
         break;
     case 1100110:
-        barCodeData.push_back(1);
+        barCodeUnitData.push_back(1);
         break;
     case 1101100:
-        barCodeData.push_back(2);
+        barCodeUnitData.push_back(2);
         break;
     case 1000010:
-        barCodeData.push_back(3);
+        barCodeUnitData.push_back(3);
         break;
     case 1011100:
-        barCodeData.push_back(4);
+        barCodeUnitData.push_back(4);
         break;
     case 1001110:
-        barCodeData.push_back(5);
+        barCodeUnitData.push_back(5);
         break;
     case 1010000:
-        barCodeData.push_back(6);
+        barCodeUnitData.push_back(6);
         break;
     case 1000100:
-        barCodeData.push_back(7);
+        barCodeUnitData.push_back(7);
         break;
     case 1001000:
-        barCodeData.push_back(8);
+        barCodeUnitData.push_back(8);
         break;
     case 1110100:
-        barCodeData.push_back(9);
+        barCodeUnitData.push_back(9);
         break;
     default:
-        barCodeData.push_back(-1);
+        barCodeUnitData.push_back(-1);
     }
-    return barCodeData;
+    return barCodeUnitData;
 }

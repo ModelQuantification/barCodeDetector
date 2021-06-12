@@ -28,7 +28,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Open Camera</string>
+    <string>打开摄像头并检测</string>
    </property>
   </widget>
   <widget class="QPushButton" name="detectImage">
@@ -41,7 +41,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Detect Image</string>
+    <string>打开图片并检测</string>
    </property>
   </widget>
   <widget class="QPushButton" name="detectBarCode">
@@ -54,7 +54,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Detect Bar Code</string>
+    <string>腾讯云识别一帧图片</string>
    </property>
   </widget>
   <widget class="QPushButton" name="closeCamera">
@@ -67,15 +67,15 @@
     </rect>
    </property>
    <property name="text">
-    <string>Close Camera</string>
+    <string>关闭摄像头</string>
    </property>
   </widget>
   <widget class="QLabel" name="barCodeShow">
    <property name="geometry">
     <rect>
-     <x>830</x>
-     <y>630</y>
-     <width>351</width>
+     <x>930</x>
+     <y>490</y>
+     <width>261</width>
      <height>51</height>
     </rect>
    </property>
@@ -85,13 +85,13 @@
     </font>
    </property>
    <property name="text">
-    <string>就绪！</string>
+    <string>等待！</string>
    </property>
   </widget>
   <widget class="QLabel" name="imgFrame">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>110</x>
      <y>120</y>
      <width>681</width>
      <height>461</height>
@@ -104,9 +104,9 @@
   <widget class="QComboBox" name="comboBox">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>600</y>
-     <width>141</width>
+     <x>870</x>
+     <y>330</y>
+     <width>151</width>
      <height>25</height>
     </rect>
    </property>
@@ -120,6 +120,127 @@
      <string>2-双边宽度比识别</string>
     </property>
    </item>
+  </widget>
+  <widget class="QLabel" name="comment">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>30</y>
+     <width>351</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>30</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>条形码显示：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="comment2">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>550</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>15</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>在线比对结果：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="judgle">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>580</y>
+     <width>101</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>27</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>等待！</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="comment3">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>370</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>15</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>本地识别结果：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="detect">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>400</y>
+     <width>261</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>26</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>等待！</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="comment4">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>300</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>识别方法：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="comment5">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>460</y>
+     <width>161</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>15</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>腾讯云识别结果：</string>
+   </property>
   </widget>
  </widget>
  <resources/>

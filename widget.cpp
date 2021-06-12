@@ -167,6 +167,10 @@ void Widget::on_detectImage_clicked()
     // CodeInfo 2 barCodeNumber
     uint8_t barCodeNumber[13] = {0};
     codeInfo2BarCodeNumber(pCodeInfo, barCodeNumber);
+    for (int i = 0; i < 13; i++)
+    {
+        printf("%d\n",barCodeNumber[i]);
+    }
 
     // 在QT中显示效果
     Mat cvTempImg;

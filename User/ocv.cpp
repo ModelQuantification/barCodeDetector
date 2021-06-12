@@ -155,6 +155,9 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     // 存放getBarCodeData生成的数据
     vector<int> barCodeUnitData;
 
+    // 条形码奇偶判断,存放条形码前六位的奇偶位
+    int barCodeParityJudgeCompose[6], barCodeParityJudge = 0;
+
     // 前三位101
     for (nowIndex = 0; nowIndex < 3; nowIndex++)
     {
@@ -189,7 +192,10 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
 
         // 这里开始把每个数据做提取, 并放入barCodeNumber中
         // printf("%d\n", barCodeUnitData[0]);
-        barCodeNumber[temp] = barCodeUnitData[0];
+        barCodeNumber[temp + 1] = barCodeUnitData[0];
+
+        // 通过6位(条形码前半部分)得出第1位
+        barCodeParityJudgeCompose[temp] = barCodeUnitData[1];
 
         index = index + 7;
         // printf("\n");
@@ -230,7 +236,7 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
 
         // 这里开始把每个数据做提取, 并放入barCodeNumber中
         // printf("%d\n", barCodeUnitData[0]);
-        barCodeNumber[temp+7] = barCodeUnitData[0];
+        barCodeNumber[temp + 7] = barCodeUnitData[0];
 
         index = index + 7;
         // printf("\n");
@@ -241,6 +247,14 @@ int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
     {
         // printf("%d ", pCodeInfo[nowIndex]);
     }
+
+    // 把判断奇偶位的数组合并成1位
+    for (int i = 0; i < 6; i++)
+    {
+        barCodeParityJudge = barCodeParityJudge * 10 + barCodeParityJudgeCompose[i];
+    }
+    // printf("%d\n", barCodeParityJudge);
+    barCodeNumber[0] = parityJudge(barCodeParityJudge);
 
     return 0;
 }
@@ -375,4 +389,37 @@ vector<int> getBarCodeData(int barCodeUnit)
         barCodeUnitData.push_back(-1);
     }
     return barCodeUnitData;
+}
+
+/**
+ * @brief 通过条形码的12位解析出第1位
+ * @author Ziyi Cheng
+ */
+int parityJudge(int barCodeParityJudge)
+{
+    switch (barCodeParityJudge)
+    {
+    case 0:
+        return 0;
+    case 1011:
+        return 1;
+    case 1101:
+        return 2;
+    case 1110:
+        return 3;
+    case 10011:
+        return 4;
+    case 11001:
+        return 5;
+    case 11100:
+        return 6;
+    case 10101:
+        return 7;
+    case 10110:
+        return 8;
+    case 11010:
+        return 9;
+    default:
+        return -1;
+    }
 }

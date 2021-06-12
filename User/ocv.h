@@ -14,3 +14,4 @@ int GenerateMiddleYData(Mat image, uint8_t *ptrPx);
 int FindBarCodeStart_EndPxInArray(uint8_t *array, int *barCodeStartPx, int *barCodeEndPx);
 int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber);
 vector<int> getBarCodeData(int barCodeUnit);
+int parityJudge(int barCodeParityJudge);

@@ -8,6 +8,7 @@
 #include "Python.h"
 #include "string.h"
 #include "./User/ocv.h"
+#include "pthread.h"
 
 using namespace cv;
 using namespace std;
@@ -37,7 +38,7 @@ void Widget::on_openCamera_clicked()
         std::cout << "摄像头没连接";
     }
     CameraStatus = 1;
-    
+
     Mat cvTempImg;
     QImage qtShowImg;
     while (CameraStatus)
@@ -54,8 +55,10 @@ void Widget::on_openCamera_clicked()
             break;
         // cameraFrame就是一个图片
     }
-    // TODO 创建一个新的进程，没秒完成1次识别操作，把识别的结果显示到QT
-    
+    // TODO 创建多个新的线程，每秒完成1次识别操作，把识别的结果显示到QT
+    // 实现过程：传给线程一帧已裁减的图片，线程传13位数据给QT
+    // 实现目标：把一秒分为5段，在每个0.2秒都完成一个检测操作，然后只要操作完成就显示结果
+    // 如果一个线程有未识别的结果，就丢弃这个结果，线程中止
 }
 
 void Widget::on_detectImage_clicked()

@@ -12,8 +12,12 @@
 using namespace cv;
 using namespace std;
 
+// 相机状态
 int CameraStatus = 0;
+// 图片全局路径
 string img_file_dir;
+// 视频帧
+Mat cameraFrame;
 
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 {
@@ -27,26 +31,20 @@ Widget::~Widget()
 
 void Widget::on_openCamera_clicked()
 {
-    // 暂时不知道作用
-    int WIDTH = 720;
-    int HEIGHT = 480;
-    int FPS = 30;
-
     VideoCapture capture(0);
     if (!capture.isOpened())
     {
         std::cout << "摄像头没连接";
     }
-
     CameraStatus = 1;
-    Mat frame;
+    
     Mat cvTempImg;
     QImage qtShowImg;
     while (CameraStatus)
     {
-        capture >> frame;
+        capture >> cameraFrame;
         // 在QT中显示效果
-        cv::cvtColor(frame, cvTempImg, COLOR_BGR2RGB);
+        cv::cvtColor(cameraFrame, cvTempImg, COLOR_BGR2RGB);
         qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
         ui->imgFrame->clear();
         ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
@@ -54,8 +52,10 @@ void Widget::on_openCamera_clicked()
         // ESC
         if (cv::waitKey(1) == 27)
             break;
-        // frame就是一个图片
+        // cameraFrame就是一个图片
     }
+    // TODO 创建一个新的进程，没秒完成1次识别操作，把识别的结果显示到QT
+    
 }
 
 void Widget::on_detectImage_clicked()

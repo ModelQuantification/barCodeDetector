@@ -6,6 +6,7 @@
 #include "./ui_widget.h"
 #include "QFileDialog"
 #include "Python.h"
+#include "string.h"
 #include "./User/ocv.h"
 
 using namespace cv;
@@ -165,12 +166,25 @@ void Widget::on_detectImage_clicked()
     }
 
     // CodeInfo 2 barCodeNumber
-    uint8_t barCodeNumber[13] = {0};
+    uint8_t barCodeNumber[14] = {0};
     codeInfo2BarCodeNumber(pCodeInfo, barCodeNumber);
+
+    // unitTest 每个编码是否正确
+    // for (int i = 0; i < 13; i++)
+    // {
+    //     printf("%d\n",barCodeNumber[i]);
+    // }
+
+    // 把条形码数组转为字符串并UI显示
+    char barCodeNumStr[14] = {0};
     for (int i = 0; i < 13; i++)
     {
-        printf("%d\n",barCodeNumber[i]);
+        barCodeNumStr[i] = barCodeNumber[i] + 48;
     }
+    // printf("%s\n", barCodeNumStr);
+    QString qstr = QString::fromStdString(barCodeNumStr);
+    ui->detect->clear();
+    ui->detect->setText(qstr);
 
     // 在QT中显示效果
     Mat cvTempImg;

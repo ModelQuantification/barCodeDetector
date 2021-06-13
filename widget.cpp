@@ -50,15 +50,14 @@ void Widget::on_openCamera_clicked()
         ui->imgFrame->clear();
         ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
         ui->imgFrame->show();
-        // ESC
-        if (cv::waitKey(1) == 27)
-            break;
+
         // cameraFrame就是一个图片
     }
     // TODO 创建多个新的线程，每秒完成1次识别操作，把识别的结果显示到QT
     // 实现过程：传给线程一帧已裁减的图片，线程传13位数据给QT
     // 实现目标：把一秒分为5段，在每个0.2秒都完成一个检测操作，然后只要操作完成就显示结果
     // 如果一个线程有未识别的结果，就丢弃这个结果，线程中止
+
 }
 
 void Widget::on_detectImage_clicked()
@@ -71,7 +70,7 @@ void Widget::on_detectImage_clicked()
     Mat barCodeImg, framedBarCodeImg;
 
     img_file_dir = imgName.toStdString();
-    originImg = imread(imgName.toStdString());
+    originImg = imread(imgName.toStdString()); // 输入一个图片
 
     barCodeMaskImg = DetectBarCodeInImage(originImg);
 
@@ -185,7 +184,7 @@ void Widget::on_detectImage_clicked()
         barCodeNumStr[i] = barCodeNumber[i] + 48;
     }
     // printf("%s\n", barCodeNumStr);
-    QString qstr = QString::fromStdString(barCodeNumStr);
+    QString qstr = QString::fromStdString(barCodeNumStr);  // 输出字符串
     ui->detect->clear();
     ui->detect->setText(qstr);
 

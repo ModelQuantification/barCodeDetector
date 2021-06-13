@@ -90,11 +90,9 @@ int methodLeaping2DetectBarCodeImg(Mat barCodeImg, char *barCodeNumStr)
             *(pCodeInfo + i) = 1;
     }
 
-
     // CodeInfo 2 barCodeNumber
     uint8_t barCodeNumber[14] = {0};
     codeInfo2BarCodeNumber(pCodeInfo, barCodeNumber);
-
     // unitTest 每个编码是否正确
     // for (int i = 0; i < 13; i++)
     // {
@@ -106,5 +104,14 @@ int methodLeaping2DetectBarCodeImg(Mat barCodeImg, char *barCodeNumStr)
     {
         barCodeNumStr[i] = barCodeNumber[i] + 48;
     }
+
+    // 释放条形码宽度指针
+    free(pWeight);
+    pWeight = NULL;
+
+    // 释放条形码信息指针
+    free(pCodeInfo);
+    pCodeInfo = NULL;
+
     return 0;
 }

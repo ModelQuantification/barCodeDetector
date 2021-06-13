@@ -106,11 +106,17 @@ void Widget::on_detectImage_clicked()
     // 在QT中显示效果
     Mat cvTempImg;
     QImage qtShowImg;
-    cv::cvtColor(barCodeImg, cvTempImg, COLOR_BGR2RGB);
+    cv::cvtColor(framedBarCodeImg, cvTempImg, COLOR_BGR2RGB);
     qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
     ui->imgFrame->clear();
     ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
     ui->imgFrame->show();
+
+    cv::cvtColor(barCodeImg, cvTempImg, COLOR_BGR2RGB);
+    qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
+    ui->cropImg->clear();
+    ui->cropImg->setPixmap(QPixmap::fromImage(qtShowImg));
+    ui->cropImg->show();
 
     // 当没有imshow时关闭waitKey
     waitKey();

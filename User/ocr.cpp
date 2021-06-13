@@ -11,7 +11,7 @@ int methodLeaping2DetectBarCodeImg(Mat barCodeImg, char *barCodeNumStr)
     int barCodeWeight = barCodeImg.cols;
     uint8_t *pWeight = (uint8_t *)malloc(barCodeWeight * sizeof(uint8_t) + 1);
     if (pWeight == NULL) // 如果请求不了内存
-        return;
+        return -1;
 
     // 读取条形码中间一行像素并返回
     int ret;
@@ -31,7 +31,7 @@ int methodLeaping2DetectBarCodeImg(Mat barCodeImg, char *barCodeNumStr)
     int barCodeStartPx = 0;
     int barCodeEndPx = 0;
 
-    / 找到开始位置和结束位置
+    // 找到开始位置和结束位置
     if (0 == ret)
     {
         ret = FindBarCodeStart_EndPxInArray(pWeight, &barCodeStartPx, &barCodeEndPx);
@@ -50,7 +50,7 @@ int methodLeaping2DetectBarCodeImg(Mat barCodeImg, char *barCodeNumStr)
     // 把条形码每个存在信息的数据填入pCodeInfo中
     uint8_t *pCodeInfo = (uint8_t *)malloc(95 * sizeof(uint8_t) + 1);
     if (pCodeInfo == NULL) // 如果请求不了内存
-        return;
+        return -1;
     float temp;
     *(pCodeInfo + 95) = 99;
     for (int i = 0; i < 95; i++)
@@ -106,4 +106,5 @@ int methodLeaping2DetectBarCodeImg(Mat barCodeImg, char *barCodeNumStr)
     {
         barCodeNumStr[i] = barCodeNumber[i] + 48;
     }
+    return 0;
 }

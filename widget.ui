@@ -105,7 +105,7 @@
    <property name="geometry">
     <rect>
      <x>870</x>
-     <y>330</y>
+     <y>340</y>
      <width>151</width>
      <height>25</height>
     </rect>
@@ -136,7 +136,7 @@
     </font>
    </property>
    <property name="text">
-    <string>条形码显示：</string>
+    <string>条形码画框显示：</string>
    </property>
   </widget>
   <widget class="QLabel" name="comment2">
@@ -215,7 +215,7 @@
    <property name="geometry">
     <rect>
      <x>800</x>
-     <y>300</y>
+     <y>320</y>
      <width>91</width>
      <height>17</height>
     </rect>
@@ -240,6 +240,60 @@
    </property>
    <property name="text">
     <string>腾讯云识别结果：</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="cropImg">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>90</y>
+     <width>391</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="comment6">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>270</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>检测方法：</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="detectBox">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>290</y>
+     <width>151</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="comment7">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>40</y>
+     <width>231</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>条形码裁减显示：</string>
    </property>
   </widget>
  </widget>

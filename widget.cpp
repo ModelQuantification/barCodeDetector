@@ -62,19 +62,27 @@ void Widget::on_openCamera_clicked()
 
 void Widget::on_detectImage_clicked()
 {
+    // 检测方法选择
+    int methodFlag = ui->comboBox->currentIndex();
+    // printf("使用方法: %d\n", methodFlag);
+
     QString imgName = QFileDialog::getOpenFileName(this, tr("open image file"), "./",
                                                    tr("Image files(*.png *.jpg);;All files (*.*)"));
     if (imgName.isEmpty())
         return;
-    Mat originImg, barCodeMaskImg;
-    Mat barCodeImg, framedBarCodeImg;
+    Mat originImg;
 
     img_file_dir = imgName.toStdString();
     originImg = imread(imgName.toStdString()); // 输入一个图片
 
+    // 经过裁减的条形码图片、条形码蒙板图片、画框后的条形码图片
+    Mat barCodeImg, barCodeMaskImg, framedBarCodeImg;
+
+    // 经过探测得到的条形码蒙板图片
     barCodeMaskImg = DetectBarCodeInImage(originImg);
 
     // 可以修改函数代码为裁减或带框
+    // TODO 分开裁减和带框为两个不同的函数
     barCodeImg = DrawFrame4BarCode(originImg, barCodeMaskImg);
 
     // unitTest 不框测试
@@ -111,10 +119,6 @@ void Widget::on_detectImage_clicked()
     }
     // printf("%d %d\n", barCodeStartPx, barCodeEndPx);
     // printf("%d %d\n", *(pWeight + barCodeStartPx), *(pWeight + barCodeEndPx));
-
-    // 方法选择
-    int methodFlag = ui->comboBox->currentIndex();
-    // printf("使用方法: %d\n", methodFlag);
 
     // 条形码开始到结尾的长度
     int barCodeLen = barCodeEndPx - barCodeStartPx + 1;
@@ -184,7 +188,7 @@ void Widget::on_detectImage_clicked()
         barCodeNumStr[i] = barCodeNumber[i] + 48;
     }
     // printf("%s\n", barCodeNumStr);
-    QString qstr = QString::fromStdString(barCodeNumStr);  // 输出字符串
+    QString qstr = QString::fromStdString(barCodeNumStr); // 输出字符串
     ui->detect->clear();
     ui->detect->setText(qstr);
 

@@ -56,10 +56,35 @@ Mat DetectBarCodeInImage(Mat image)
 }
 
 /**
- * @brief 对条形码画框,返回条形码裁减图
- * @note 可返回未裁减图
+ * @brief 对条形码画框,返回条形码画框图
  */
 Mat DrawFrame4BarCode(Mat image, Mat mask)
+{
+    Mat resultImage;
+    Rect rect;
+    // 角点初始化
+    vector<vector<Point>> contours;
+    vector<Vec4i> hiera;
+
+    // 对带框图片深拷贝
+    image.copyTo(resultImage);
+
+    // 通过findContours找到条形码区域的矩形边界
+    findContours(mask, contours, hiera, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    for (int i = 0; i < contours.size(); i++)
+    {
+        rect = boundingRect((Mat)contours[i]);
+        rectangle(image, rect, Scalar(255, 0, 0), 2);
+    }
+
+    // imshow("二维码画框图", resultImage);
+    return resultImage;
+}
+
+/**
+ * @brief 对条形码画框,返回条形码裁减图
+ */
+Mat cropFrame4BarCode(Mat image, Mat mask)
 {
     Mat resultImage;
     Rect rect;
@@ -77,8 +102,6 @@ Mat DrawFrame4BarCode(Mat image, Mat mask)
 
     // 对带框图片裁减
     resultImage = Mat(image, rect);
-    // 对带框图片深拷贝
-    // image.copyTo(resultImage);
 
     // imshow("二维码矩形区域图像裁剪", resultImage);
     return resultImage;

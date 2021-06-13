@@ -16,7 +16,7 @@ using namespace std;
 // 相机状态
 int CameraStatus = 0;
 // 图片全局路径
-string img_file_dir;
+string imgFileDir;
 // 视频帧
 Mat cameraFrame;
 
@@ -72,7 +72,7 @@ void Widget::on_detectImage_clicked()
         return;
     Mat originImg;
 
-    img_file_dir = imgName.toStdString();
+    imgFileDir = imgName.toStdString();
     originImg = imread(imgName.toStdString()); // 输入一个图片
 
     // 经过裁减的条形码图片、条形码蒙板图片、画框后的条形码图片
@@ -81,9 +81,11 @@ void Widget::on_detectImage_clicked()
     // 经过探测得到的条形码蒙板图片
     barCodeMaskImg = DetectBarCodeInImage(originImg);
 
-    // 可以修改函数代码为裁减或带框
-    // TODO 分开裁减和带框为两个不同的函数
-    barCodeImg = DrawFrame4BarCode(originImg, barCodeMaskImg);
+    // 给条形码画框的原始图片
+    framedBarCodeImg = DrawFrame4BarCode(originImg, barCodeMaskImg);
+
+    // 裁减条形码图片
+    barCodeImg = cropFrame4BarCode(originImg, barCodeMaskImg);
 
     // unitTest 不框测试
     // barCodeImg = originImg;
@@ -215,7 +217,7 @@ void Widget::on_detectImage_clicked()
 
 void Widget::on_detectBarCode_clicked()
 {
-    // cout << img_file_dir << std::endl;
+    // cout << imgFileDir << std::endl;
     Py_Initialize();
     if (!Py_IsInitialized())
     {
@@ -240,9 +242,9 @@ void Widget::on_detectBarCode_clicked()
         return;
     }
     // 把参数转换为Python类型
-    char *ptr_img_file_dir = (char *)img_file_dir.data();
+    char *ptrImgFileDir = (char *)imgFileDir.data();
     PyObject *pArgs = PyTuple_New(1);
-    PyObject *barCode_img_file_dir = Py_BuildValue("s", ptr_img_file_dir);
+    PyObject *barCode_img_file_dir = Py_BuildValue("s", ptrImgFileDir);
     PyTuple_SetItem(pArgs, 0, barCode_img_file_dir);
     // 使用该方法(函数)并得到返回值
     PyObject *pyValue = PyEval_CallObject(pFunDetectBarCode, pArgs);

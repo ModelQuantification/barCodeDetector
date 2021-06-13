@@ -74,7 +74,7 @@ Mat DrawFrame4BarCode(Mat image, Mat mask)
     for (int i = 0; i < contours.size(); i++)
     {
         rect = boundingRect((Mat)contours[i]);
-        rectangle(image, rect, Scalar(255, 0, 0), 2);
+        rectangle(resultImage, rect, Scalar(255, 0, 0), 2);
     }
 
     // imshow("二维码画框图", resultImage);
@@ -92,16 +92,18 @@ Mat cropFrame4BarCode(Mat image, Mat mask)
     vector<vector<Point>> contours;
     vector<Vec4i> hiera;
 
+    // 对带框图片深拷贝
+    image.copyTo(resultImage);
+
     // 通过findContours找到条形码区域的矩形边界
     findContours(mask, contours, hiera, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
     for (int i = 0; i < contours.size(); i++)
     {
         rect = boundingRect((Mat)contours[i]);
-        rectangle(image, rect, Scalar(255, 0, 0), 2);
     }
 
     // 对带框图片裁减
-    resultImage = Mat(image, rect);
+    resultImage = Mat(resultImage, rect);
 
     // imshow("二维码矩形区域图像裁剪", resultImage);
     return resultImage;

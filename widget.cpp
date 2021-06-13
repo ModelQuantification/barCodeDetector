@@ -50,6 +50,9 @@ void Widget::on_openCamera_clicked()
     // 经过裁减的条形码图片、条形码蒙板图片、画框后的条形码图片
     Mat barCodeImg, barCodeMaskImg, framedBarCodeImg;
 
+    // 条形码字符串
+    char barCodeNumStr[14] = {0};
+
     while (CameraStatus)
     {
         capture >> cameraFrame;
@@ -70,8 +73,6 @@ void Widget::on_openCamera_clicked()
         // 裁减条形码图片
         barCodeImg = cropFrame4BarCode(cameraFrame, barCodeMaskImg);
 
-        // 条形码字符串
-        char barCodeNumStr[14] = {0};
         // 使用方法一检测
         if (0 == methodFlag)
         {

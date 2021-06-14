@@ -245,9 +245,9 @@
   <widget class="QLabel" name="cropImg">
    <property name="geometry">
     <rect>
-     <x>800</x>
+     <x>770</x>
      <y>80</y>
-     <width>391</width>
+     <width>451</width>
      <height>171</height>
     </rect>
    </property>

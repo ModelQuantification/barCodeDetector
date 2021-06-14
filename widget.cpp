@@ -59,40 +59,40 @@ void Widget::on_openCamera_clicked()
         capture >> cameraFrame;
 
         // 经过探测得到的条形码蒙板图片
-        // barCodeMaskImg = DetectBarCodeInImage(cameraFrame);
+        barCodeMaskImg = DetectBarCodeInImage(cameraFrame);
 
         // 给条形码画框的原始图片
-        // framedBarCodeImg = DrawFrame4BarCode(cameraFrame, barCodeMaskImg);
+        framedBarCodeImg = DrawFrame4BarCode(cameraFrame, barCodeMaskImg);
 
         // 裁减条形码图片
-        // barCodeImg = cropFrame4BarCode(cameraFrame, barCodeMaskImg);
+        barCodeImg = cropFrame4BarCode(cameraFrame, barCodeMaskImg);
 
         // 使用方法一检测
-        // if (0 == methodFlag)
-        // {
-        //     methodLeaping2DetectBarCodeImg(barCodeImg, barCodeNumStr);
-        // }
+        if (0 == methodFlag)
+        {
+            methodLeaping2DetectBarCodeImg(barCodeImg, barCodeNumStr);
+        }
 
-        // printf("%s\n", barCodeNumStr);
-        // QString qstr = QString::fromStdString(barCodeNumStr); // 输出字符串
-        // ui->detect->clear();
-        // ui->detect->setText(qstr);
+        printf("%s\n", barCodeNumStr);
+        QString qstr = QString::fromStdString(barCodeNumStr); // 输出字符串
+        ui->detect->clear();
+        ui->detect->setText(qstr);
 
         // 在QT中显示效果
-        cv::cvtColor(cameraFrame, cvTempImg, COLOR_BGR2RGB);
+        cv::cvtColor(framedBarCodeImg, cvTempImg, COLOR_BGR2RGB);
         qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
         ui->imgFrame->clear();
         ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
         ui->imgFrame->show();
 
-        // cv::cvtColor(barCodeImg, cvTempImg, COLOR_BGR2RGB);
-        // qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
-        // ui->cropImg->clear();
-        // ui->cropImg->setPixmap(QPixmap::fromImage(qtShowImg));
-        // ui->cropImg->show();
+        cv::cvtColor(barCodeImg, cvTempImg, COLOR_BGR2RGB);
+        qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
+        ui->cropImg->clear();
+        ui->cropImg->setPixmap(QPixmap::fromImage(qtShowImg));
+        ui->cropImg->show();
 
         // ESC-如果删除这句会报错
-        if (cv::waitKey(1) == 27)
+        if (cv::waitKey(30) == 27)
             break;
     }
     // TODO 创建多个新的线程，每秒完成1次识别操作，把识别的结果显示到QT

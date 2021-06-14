@@ -41,7 +41,7 @@ void Widget::on_openCamera_clicked()
     CameraStatus = 1;
 
     // 检测方法选择
-    // int methodFlag = ui->comboBox->currentIndex();
+    int methodFlag = ui->comboBox->currentIndex();
     // printf("使用方法: %d\n", methodFlag);
 
     Mat cvTempImg;
@@ -55,14 +55,8 @@ void Widget::on_openCamera_clicked()
 
     while (CameraStatus)
     {
-        capture >> cameraFrame;
-        // 在QT中显示摄像头效果
-        cv::cvtColor(cameraFrame, cvTempImg, COLOR_BGR2RGB);
-        qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
-        ui->imgFrame->clear();
-        ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
-        ui->imgFrame->show();
         // cameraFrame就是一个图片
+        capture >> cameraFrame;
 
         // 经过探测得到的条形码蒙板图片
         // barCodeMaskImg = DetectBarCodeInImage(cameraFrame);
@@ -84,17 +78,22 @@ void Widget::on_openCamera_clicked()
         // ui->detect->clear();
         // ui->detect->setText(qstr);
 
-        // cv::cvtColor(framedBarCodeImg, cvTempImg, COLOR_BGR2RGB);
-        // qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
-        // ui->imgFrame->clear();
-        // ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
-        // ui->imgFrame->show();
+        // 在QT中显示效果
+        cv::cvtColor(cameraFrame, cvTempImg, COLOR_BGR2RGB);
+        qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
+        ui->imgFrame->clear();
+        ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
+        ui->imgFrame->show();
 
         // cv::cvtColor(barCodeImg, cvTempImg, COLOR_BGR2RGB);
         // qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
         // ui->cropImg->clear();
         // ui->cropImg->setPixmap(QPixmap::fromImage(qtShowImg));
         // ui->cropImg->show();
+
+        // ESC-如果删除这句会报错
+        if (cv::waitKey(1) == 27)
+            break;
     }
     // TODO 创建多个新的线程，每秒完成1次识别操作，把识别的结果显示到QT
     // 实现过程：传给线程一帧已裁减的图片，线程传13位数据给QT

@@ -33,7 +33,15 @@ Widget::~Widget()
 
 void Widget::on_openCamera_clicked()
 {
+    // 打开摄像头
     VideoCapture capture(0);
+
+    // 打开文件
+    // VideoCapture capture("./img/barCode.mp4");
+    //获取整个帧数
+    // long totalFrameNumber = capture.get(CAP_PROP_FRAME_COUNT);
+    // cout << "整个视频共" << totalFrameNumber << "帧" << endl;
+
     if (!capture.isOpened())
     {
         std::cout << "摄像头没连接";

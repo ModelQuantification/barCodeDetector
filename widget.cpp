@@ -9,6 +9,7 @@
 #include "string.h"
 #include "./User/ocr.h"
 #include "./User/ocv.h"
+#include "./User/cam.h"
 
 using namespace cv;
 using namespace std;
@@ -59,10 +60,10 @@ Widget::~Widget()
 void Widget::on_openCamera_clicked()
 {
     // 打开摄像头
-    // VideoCapture capture(0);
+    VideoCapture capture(0);
 
     // 打开文件
-    VideoCapture capture("./img/barCode.mp4");
+    // VideoCapture capture("./img/barCode.mp4");
     //获取整个帧数
     // long totalFrameNumber = capture.get(CAP_PROP_FRAME_COUNT);
     // cout << "整个视频共" << totalFrameNumber << "帧" << endl;
@@ -116,8 +117,11 @@ void Widget::on_openCamera_clicked()
         //     threadTag = 0;
         // }
 
+        // unitTest 测试摄像头是否有问题
+        // barCodeMaskImg = cameraFrame;
+
         // 经过探测得到的条形码蒙板图片
-        barCodeMaskImg = DetectBarCodeInImage(cameraFrame);
+        barCodeMaskImg = DetectBarCodeInImage4Video(cameraFrame, cvTempImg);
 
         // 给条形码画框的原始图片
         // framedBarCodeImg = DrawFrame4BarCode(cameraFrame, barCodeMaskImg);
@@ -137,7 +141,7 @@ void Widget::on_openCamera_clicked()
         // ui->detect->setText(qstr);
 
         // 在QT中显示效果
-        cv::cvtColor(barCodeMaskImg, cvTempImg, COLOR_BGR2RGB);
+        cv::cvtColor(framedBarCodeImg, cvTempImg, COLOR_BGR2RGB);
         qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
         ui->imgFrame->clear();
         ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));

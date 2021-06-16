@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include "pthread.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -32,5 +33,10 @@ private slots:
 
 private:
     Ui::Widget *ui;
+    // pthread_t threads[];
 };
+
+
+
+
 #endif // WIDGET_H

@@ -9,10 +9,11 @@
 #include "string.h"
 #include "./User/ocr.h"
 #include "./User/ocv.h"
-#include "pthread.h"
 
 using namespace cv;
 using namespace std;
+
+#define NUM_THREADS 5
 
 // 相机状态
 int CameraStatus = 0;
@@ -31,13 +32,37 @@ Widget::~Widget()
     delete ui;
 }
 
+// void *tFunc(void *img)
+// {
+//     Mat barCodeImg, barCodeMaskImg, framedBarCodeImg;
+//     char barCodeNumStr[14] = {0};
+//     Mat getFrame = *(Mat *)img;
+//     // 经过探测得到的条形码蒙板图片
+//     barCodeMaskImg = DetectBarCodeInImage(getFrame);
+
+//     // 给条形码画框的原始图片
+//     framedBarCodeImg = DrawFrame4BarCode(getFrame, barCodeMaskImg);
+
+//     // 裁减条形码图片
+//     barCodeImg = cropFrame4BarCode(getFrame, barCodeMaskImg);
+
+//     // 使用方法一检测
+//     // if (0 == methodFlag)
+//     // {
+//     methodLeaping2DetectBarCodeImg(barCodeImg, barCodeNumStr);
+//     // }
+
+//     // 返回条形码
+//     return barCodeNumStr;
+// }
+
 void Widget::on_openCamera_clicked()
 {
     // 打开摄像头
-    VideoCapture capture(0);
+    // VideoCapture capture(0);
 
     // 打开文件
-    // VideoCapture capture("./img/barCode.mp4");
+    VideoCapture capture("./img/barCode.mp4");
     //获取整个帧数
     // long totalFrameNumber = capture.get(CAP_PROP_FRAME_COUNT);
     // cout << "整个视频共" << totalFrameNumber << "帧" << endl;
@@ -61,43 +86,68 @@ void Widget::on_openCamera_clicked()
     // 条形码字符串
     char barCodeNumStr[14] = {0};
 
+    // 创建多个线程
+    // pthread_t threads[NUM_THREADS];
+    // 创建线程完成标志位，如果为1代表线程正在运行，如果为0代表现存并没有运行
+    // int threadFinishFlag[NUM_THREADS] = {0};
+    // 线程状态标志位
+    // int threadStatusFlag[NUM_THREADS] = {0};
+    // 控制的是第几个线程
+    // int threadTag = 0;
+
     while (CameraStatus)
     {
         // cameraFrame就是一个图片
         capture >> cameraFrame;
 
+        // 创建一个新的处理线程
+        // threadStatusFlag[threadTag] = pthread_create(&threads[threadTag], NULL, tFunc, &cameraFrame);
+        // if (threadStatusFlag[threadTag])
+        // {
+        //     // 出现错误
+        //     printf("ERROR; return code from pthread_create() is %d\n", threadStatusFlag[threadTag]);
+        //     exit(-1);
+        // }
+
+        // 准备下一个线程
+        // threadTag++;
+        // if (threadTag == NUM_THREADS)
+        // {
+        //     threadTag = 0;
+        // }
+
         // 经过探测得到的条形码蒙板图片
         barCodeMaskImg = DetectBarCodeInImage(cameraFrame);
 
         // 给条形码画框的原始图片
-        framedBarCodeImg = DrawFrame4BarCode(cameraFrame, barCodeMaskImg);
+        // framedBarCodeImg = DrawFrame4BarCode(cameraFrame, barCodeMaskImg);
 
         // 裁减条形码图片
-        barCodeImg = cropFrame4BarCode(cameraFrame, barCodeMaskImg);
+        // barCodeImg = cropFrame4BarCode(cameraFrame, barCodeMaskImg);
 
         // 使用方法一检测
-        if (0 == methodFlag)
-        {
-            methodLeaping2DetectBarCodeImg(barCodeImg, barCodeNumStr);
-        }
+        // if (0 == methodFlag)
+        // {
+        //     methodLeaping2DetectBarCodeImg(barCodeImg, barCodeNumStr);
+        // }
 
-        printf("%s\n", barCodeNumStr);
-        QString qstr = QString::fromStdString(barCodeNumStr); // 输出字符串
-        ui->detect->clear();
-        ui->detect->setText(qstr);
+        // printf("%s\n", barCodeNumStr);
+        // QString qstr = QString::fromStdString(barCodeNumStr); // 输出字符串
+        // ui->detect->clear();
+        // ui->detect->setText(qstr);
 
         // 在QT中显示效果
-        cv::cvtColor(framedBarCodeImg, cvTempImg, COLOR_BGR2RGB);
+        cv::cvtColor(barCodeMaskImg, cvTempImg, COLOR_BGR2RGB);
         qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
         ui->imgFrame->clear();
         ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
         ui->imgFrame->show();
 
-        cv::cvtColor(barCodeImg, cvTempImg, COLOR_BGR2RGB);
-        qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
-        ui->cropImg->clear();
-        ui->cropImg->setPixmap(QPixmap::fromImage(qtShowImg));
-        ui->cropImg->show();
+        // cv::cvtColor(barCodeImg, cvTempImg, COLOR_BGR2RGB);
+        // qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
+        // ui->cropImg->clear();
+        // ui->cropImg->setPixmap(QPixmap::fromImage(qtShowImg));
+        // ui->cropImg->show();
 
         // ESC-如果删除这句会报错
         if (cv::waitKey(30) == 27)
@@ -216,8 +266,19 @@ void Widget::on_detectBarCode_clicked()
 
 void Widget::on_closeCamera_clicked()
 {
+    // 关闭摄像头
     CameraStatus = 0;
+
+    // int threadStatusFlag[NUM_THREADS] = {1};
+    // 关闭未执行的线程
+    // for (int i = 0; i < NUM_THREADS; i++)
+    // {
+    //     // threadStatusFlag[i] = pthread_cancel(&threads[i]);
+    // }
+
+    // 清除UI框
     ui->imgFrame->clear();
+    ui->cropImg->clear();
 }
 
 void Widget::on_comboBox_currentIndexChanged(int index)

@@ -78,6 +78,7 @@ void Widget::on_openCamera_clicked()
     int methodFlag = ui->comboBox->currentIndex();
     // printf("使用方法: %d\n", methodFlag);
 
+    int ret;
     Mat cvTempImg;
     QImage qtShowImg;
 
@@ -121,13 +122,13 @@ void Widget::on_openCamera_clicked()
         // barCodeMaskImg = cameraFrame;
 
         // 经过探测得到的条形码蒙板图片
-        barCodeMaskImg = DetectBarCodeInImage4Video(cameraFrame, cvTempImg);
+        ret = DetectBarCodeInImage4Video(cameraFrame, barCodeMaskImg);
 
         // 给条形码画框的原始图片
-        // framedBarCodeImg = DrawFrame4BarCode(cameraFrame, barCodeMaskImg);
+        // ret = DrawFrame4BarCode4Video(cameraFrame, barCodeMaskImg, framedBarCodeImg);
 
         // 裁减条形码图片
-        // barCodeImg = cropFrame4BarCode(cameraFrame, barCodeMaskImg);
+        // ret = cropFrame4BarCode4Video(cameraFrame, barCodeMaskImg, barCodeImg);
 
         // 使用方法一检测
         // if (0 == methodFlag)
@@ -141,7 +142,7 @@ void Widget::on_openCamera_clicked()
         // ui->detect->setText(qstr);
 
         // 在QT中显示效果
-        cv::cvtColor(framedBarCodeImg, cvTempImg, COLOR_BGR2RGB);
+        cv::cvtColor(barCodeMaskImg, cvTempImg, COLOR_BGR2RGB);
         qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
         ui->imgFrame->clear();
         ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));

@@ -125,10 +125,10 @@ void Widget::on_openCamera_clicked()
         ret = DetectBarCodeInImage4Video(cameraFrame, barCodeMaskImg);
 
         // 给条形码画框的原始图片
-        // ret = DrawFrame4BarCode4Video(cameraFrame, barCodeMaskImg, framedBarCodeImg);
+        ret = DrawFrame4BarCode4Video(cameraFrame, barCodeMaskImg, framedBarCodeImg);
 
         // 裁减条形码图片
-        // ret = cropFrame4BarCode4Video(cameraFrame, barCodeMaskImg, barCodeImg);
+        ret = cropFrame4BarCode4Video(cameraFrame, barCodeMaskImg, barCodeImg);
 
         // 使用方法一检测
         // if (0 == methodFlag)
@@ -142,7 +142,7 @@ void Widget::on_openCamera_clicked()
         // ui->detect->setText(qstr);
 
         // 在QT中显示效果
-        cv::cvtColor(barCodeMaskImg, cvTempImg, COLOR_BGR2RGB);
+        cv::cvtColor(framedBarCodeImg, cvTempImg, COLOR_BGR2RGB);
         qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
         ui->imgFrame->clear();
         ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));

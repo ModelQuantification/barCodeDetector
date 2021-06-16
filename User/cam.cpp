@@ -57,7 +57,7 @@ int DetectBarCodeInImage4Video(Mat image, Mat &resultImage)
 /**
  * @brief 对条形码画框,返回条形码画框图
  */
-int DrawFrame4BarCode4Video(Mat image, Mat mask, Mat resultImage)
+int DrawFrame4BarCode4Video(Mat image, Mat mask, Mat &resultImage)
 {
     Rect rect;
     // 角点初始化
@@ -82,7 +82,7 @@ int DrawFrame4BarCode4Video(Mat image, Mat mask, Mat resultImage)
 /**
  * @brief 对条形码画框,返回条形码裁减图
  */
-int cropFrame4BarCode4Video(Mat image, Mat mask, Mat resultImage)
+int cropFrame4BarCode4Video(Mat image, Mat mask, Mat &resultImage)
 {
     Rect rect;
     // 角点初始化

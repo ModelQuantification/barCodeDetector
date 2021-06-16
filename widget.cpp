@@ -60,17 +60,14 @@ Widget::~Widget()
 void Widget::on_openCamera_clicked()
 {
     // 打开摄像头
-    VideoCapture capture(0);
+    // VideoCapture capture(0);
 
     // 打开文件
-    // VideoCapture capture("./img/barCode.mp4");
-    //获取整个帧数
-    // long totalFrameNumber = capture.get(CAP_PROP_FRAME_COUNT);
-    // cout << "整个视频共" << totalFrameNumber << "帧" << endl;
+    VideoCapture capture("./img/barCode.mp4");
 
     if (!capture.isOpened())
     {
-        std::cout << "摄像头没连接";
+        std::cout << "摄像头已经被其他软件使用";
     }
     CameraStatus = 1;
 
@@ -101,6 +98,9 @@ void Widget::on_openCamera_clicked()
     {
         // cameraFrame就是一个图片
         capture >> cameraFrame;
+
+        // 自动缩减手机视频(4800w)到合适的尺寸680/460
+        // cv::resize(cameraFrame, cameraFrame, cv::Size(cameraFrame.cols / 3, cameraFrame.rows / 3));
 
         // 创建一个新的处理线程
         // threadStatusFlag[threadTag] = pthread_create(&threads[threadTag], NULL, tFunc, &cameraFrame);

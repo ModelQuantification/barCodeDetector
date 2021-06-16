@@ -9,4 +9,6 @@
 using namespace cv;
 using namespace std;
 
-int methodLeaping2DetectBarCodeImg(Mat barCodeImg, char *str);
+int DetectBarCodeInImage4Video(Mat image, Mat &resultImage);
+int DrawFrame4BarCode4Video(Mat image, Mat mask, Mat &resultImage);
+int cropFrame4BarCode4Video(Mat image, Mat mask, Mat &resultImage);

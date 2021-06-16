@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include "pthread.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -28,7 +29,14 @@ private slots:
 
     void on_closeCamera_clicked();
 
+    void on_comboBox_currentIndexChanged(int index);
+
 private:
     Ui::Widget *ui;
+    // pthread_t threads[];
 };
+
+
+
+
 #endif // WIDGET_H

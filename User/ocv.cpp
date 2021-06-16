@@ -56,8 +56,7 @@ Mat DetectBarCodeInImage(Mat image)
 }
 
 /**
- * @brief 对条形码画框,返回条形码裁减图
- * @note 可返回未裁减图
+ * @brief 对条形码画框,返回条形码画框图
  */
 Mat DrawFrame4BarCode(Mat image, Mat mask)
 {
@@ -67,21 +66,70 @@ Mat DrawFrame4BarCode(Mat image, Mat mask)
     vector<vector<Point>> contours;
     vector<Vec4i> hiera;
 
+    // 对原始图片深拷贝，为了保持原始图片不改变
+    image.copyTo(resultImage);
+
     // 通过findContours找到条形码区域的矩形边界
     findContours(mask, contours, hiera, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
     for (int i = 0; i < contours.size(); i++)
     {
         rect = boundingRect((Mat)contours[i]);
-        rectangle(image, rect, Scalar(255, 0, 0), 2);
+        rectangle(resultImage, rect, Scalar(255, 0, 0), 2);
+    }
+
+    // imshow("二维码画框图", resultImage);
+    return resultImage;
+}
+
+/**
+ * @brief 对条形码画框,返回条形码裁减图
+ */
+Mat cropFrame4BarCode(Mat image, Mat mask)
+{
+    Mat resultImage;
+    Rect rect;
+    // 角点初始化
+    vector<vector<Point>> contours;
+    vector<Vec4i> hiera;
+
+    // 对原始图片深拷贝，为了保持原始图片不改变
+    image.copyTo(resultImage);
+
+    // 通过findContours找到条形码区域的矩形边界
+    findContours(mask, contours, hiera, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    for (int i = 0; i < contours.size(); i++)
+    {
+        rect = boundingRect((Mat)contours[i]);
     }
 
     // 对带框图片裁减
-    resultImage = Mat(image, rect);
-    // 对带框图片深拷贝
-    // image.copyTo(resultImage);
+    resultImage = Mat(resultImage, rect);
 
     // imshow("二维码矩形区域图像裁剪", resultImage);
     return resultImage;
+}
+
+int drawFrame_cropFrame4BarCode(Mat image, Mat mask, Mat frameImg, Mat cropImg)
+{
+    Rect rect;
+    // 角点初始化
+    vector<vector<Point>> contours;
+    vector<Vec4i> hiera;
+
+    // 对带框图片深拷贝
+    image.copyTo(frameImg);
+
+    findContours(mask, contours, hiera, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    for (int i = 0; i < contours.size(); i++)
+    {
+        rect = boundingRect((Mat)contours[i]);
+        // 对存在条形码的地方画框
+        rectangle(frameImg, rect, Scalar(255, 0, 0), 2);
+    }
+    // 裁减条形码图
+    cropImg = Mat(frameImg, rect);
+
+    return 0;
 }
 
 /**
@@ -142,8 +190,284 @@ int FindBarCodeStart_EndPxInArray(uint8_t *array, int *barCodeStartPx, int *barC
 
 /**
  * @brief 把条形码全部信息转为13位条形码值并输出
+ * @author Ziyi Cheng
  */
 int codeInfo2BarCodeNumber(uint8_t *pCodeInfo, uint8_t *barCodeNumber)
 {
+    int nowIndex, temp; //i循环6次；a95位数组的位数
+    int index = 0;
+    // -----------
+    // 条形码每位由7位二进制组成，组成标志位，7位二进制由1个int表示
+    int barCodeUnitCompose[7], unitComposeNumFlag, barCodeUnit;
+
+    // 存放getBarCodeData生成的数据
+    vector<int> barCodeUnitData;
+
+    // 条形码奇偶判断,存放条形码前六位的奇偶位
+    int barCodeParityJudgeCompose[6], barCodeParityJudge = 0;
+
+    // 前三位101
+    for (nowIndex = 0; nowIndex < 3; nowIndex++)
+    {
+        // printf("%d ", pCodeInfo[nowIndex]);
+    }
+    // printf("\n");
+
+    // 前面有效信息
+    for (temp = 0; temp < 6; temp++)
+    {
+        unitComposeNumFlag = 0;
+        barCodeUnit = 0;
+
+        for (nowIndex = 3 + index; nowIndex < 10 + index; nowIndex++)
+        {
+            // printf("%d ", pCodeInfo[nowIndex]);
+            barCodeUnitCompose[unitComposeNumFlag] = pCodeInfo[nowIndex];
+            // printf("%d ", barCodeUnitCompose[unitComposeNumFlag]);
+            unitComposeNumFlag++;
+        }
+
+        // 7位二进制数组成的数组转为1位条形码
+        for (int i = 0; i < 7; i++)
+        {
+            barCodeUnit = barCodeUnit * 10 + barCodeUnitCompose[i];
+        }
+
+        // 显示7位转为1位条形码结果
+        // printf("%07d\n", barCodeUnit);
+
+        barCodeUnitData = getBarCodeData(barCodeUnit);
+
+        // 这里开始把每个数据做提取, 并放入barCodeNumber中
+        // printf("%d\n", barCodeUnitData[0]);
+        barCodeNumber[temp + 1] = barCodeUnitData[0];
+
+        // 通过6位(条形码前半部分)得出第1位
+        barCodeParityJudgeCompose[temp] = barCodeUnitData[1];
+
+        index = index + 7;
+        // printf("\n");
+    }
+
+    // 中间分隔符
+    for (nowIndex = 45; nowIndex < 50; nowIndex++)
+    {
+        // printf("%d ", pCodeInfo[nowIndex]);
+    }
+    // printf("\n");
+
+    // 后面的有效信息
+    index = 0;
+    for (temp = 0; temp <= 5; temp++)
+    {
+        unitComposeNumFlag = 0;
+        barCodeUnit = 0;
+
+        for (nowIndex = 50 + index; nowIndex < 57 + index; nowIndex++)
+        {
+            // printf("%d ", pCodeInfo[nowIndex]);
+            barCodeUnitCompose[unitComposeNumFlag] = pCodeInfo[nowIndex];
+            // printf("%d ", barCodeUnitCompose[unitComposeNumFlag]);
+            unitComposeNumFlag++;
+        }
+
+        // 7位二进制数组成的数组转为1位条形码
+        for (int i = 0; i < 7; i++)
+        {
+            barCodeUnit = barCodeUnit * 10 + barCodeUnitCompose[i];
+        }
+
+        // 显示7位转为1位条形码结果
+        // printf("%07d\n", barCodeUnit);
+
+        barCodeUnitData = getBarCodeData(barCodeUnit);
+
+        // 这里开始把每个数据做提取, 并放入barCodeNumber中
+        // printf("%d\n", barCodeUnitData[0]);
+        barCodeNumber[temp + 7] = barCodeUnitData[0];
+
+        index = index + 7;
+        // printf("\n");
+    }
+
+    // 后三位101
+    for (nowIndex = 92; nowIndex < 95; nowIndex++)
+    {
+        // printf("%d ", pCodeInfo[nowIndex]);
+    }
+
+    // 把判断奇偶位的数组合并成1位
+    for (int i = 0; i < 6; i++)
+    {
+        barCodeParityJudge = barCodeParityJudge * 10 + barCodeParityJudgeCompose[i];
+    }
+    // printf("%d\n", barCodeParityJudge);
+    barCodeNumber[0] = parityJudge(barCodeParityJudge);
+
     return 0;
+}
+
+/**
+ * @brief 通过7位数字解析出1位数字
+ * @author Ziyi Cheng
+ */
+vector<int> getBarCodeData(int barCodeUnit)
+{
+    // 创建一个条形码单元的信息容器
+    // 第一个数据存条形码单元Num，第二个数据存条形码单元奇偶
+    vector<int> barCodeUnitData;
+    switch (barCodeUnit)
+    {
+    // a组(奇数)
+    case 1101:
+        barCodeUnitData.push_back(0);
+        barCodeUnitData.push_back(0);
+        break;
+    case 11001:
+        barCodeUnitData.push_back(1);
+        barCodeUnitData.push_back(0);
+        break;
+    case 10011:
+        barCodeUnitData.push_back(2);
+        barCodeUnitData.push_back(0);
+        break;
+    case 111101:
+        barCodeUnitData.push_back(3);
+        barCodeUnitData.push_back(0);
+        break;
+    case 100011:
+        barCodeUnitData.push_back(4);
+        barCodeUnitData.push_back(0);
+        break;
+    case 110001:
+        barCodeUnitData.push_back(5);
+        barCodeUnitData.push_back(0);
+        break;
+    case 101111:
+        barCodeUnitData.push_back(6);
+        barCodeUnitData.push_back(0);
+        break;
+    case 111011:
+        barCodeUnitData.push_back(7);
+        barCodeUnitData.push_back(0);
+        break;
+    case 110111:
+        barCodeUnitData.push_back(8);
+        barCodeUnitData.push_back(0);
+        break;
+    case 1011:
+        barCodeUnitData.push_back(9);
+        barCodeUnitData.push_back(0);
+        break;
+
+    // b组(偶数)
+    case 100111:
+        barCodeUnitData.push_back(0);
+        barCodeUnitData.push_back(1);
+        break;
+    case 110011:
+        barCodeUnitData.push_back(1);
+        barCodeUnitData.push_back(1);
+        break;
+    case 11011:
+        barCodeUnitData.push_back(2);
+        barCodeUnitData.push_back(1);
+        break;
+    case 100001:
+        barCodeUnitData.push_back(3);
+        barCodeUnitData.push_back(1);
+        break;
+    case 11101:
+        barCodeUnitData.push_back(4);
+        barCodeUnitData.push_back(1);
+        break;
+    case 111001:
+        barCodeUnitData.push_back(5);
+        barCodeUnitData.push_back(1);
+        break;
+    case 101:
+        barCodeUnitData.push_back(6);
+        barCodeUnitData.push_back(1);
+        break;
+    case 10001:
+        barCodeUnitData.push_back(7);
+        barCodeUnitData.push_back(1);
+        break;
+    case 1001:
+        barCodeUnitData.push_back(8);
+        barCodeUnitData.push_back(1);
+        break;
+    case 10111:
+        barCodeUnitData.push_back(9);
+        barCodeUnitData.push_back(1);
+        break;
+
+    // c组
+    case 1110010:
+        barCodeUnitData.push_back(0);
+        break;
+    case 1100110:
+        barCodeUnitData.push_back(1);
+        break;
+    case 1101100:
+        barCodeUnitData.push_back(2);
+        break;
+    case 1000010:
+        barCodeUnitData.push_back(3);
+        break;
+    case 1011100:
+        barCodeUnitData.push_back(4);
+        break;
+    case 1001110:
+        barCodeUnitData.push_back(5);
+        break;
+    case 1010000:
+        barCodeUnitData.push_back(6);
+        break;
+    case 1000100:
+        barCodeUnitData.push_back(7);
+        break;
+    case 1001000:
+        barCodeUnitData.push_back(8);
+        break;
+    case 1110100:
+        barCodeUnitData.push_back(9);
+        break;
+    default:
+        barCodeUnitData.push_back(-1);
+    }
+    return barCodeUnitData;
+}
+
+/**
+ * @brief 通过条形码的12位解析出第1位
+ * @author Ziyi Cheng
+ */
+int parityJudge(int barCodeParityJudge)
+{
+    switch (barCodeParityJudge)
+    {
+    case 0:
+        return 0;
+    case 1011:
+        return 1;
+    case 1101:
+        return 2;
+    case 1110:
+        return 3;
+    case 10011:
+        return 4;
+    case 11001:
+        return 5;
+    case 11100:
+        return 6;
+    case 10101:
+        return 7;
+    case 10110:
+        return 8;
+    case 11010:
+        return 9;
+    default:
+        return -1;
+    }
 }

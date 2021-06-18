@@ -100,7 +100,7 @@ void Widget::on_openCamera_clicked()
         capture >> cameraFrame;
 
         // 自动缩减手机视频(4800w)到合适的尺寸680/460
-        // cv::resize(cameraFrame, cameraFrame, cv::Size(cameraFrame.cols / 3, cameraFrame.rows / 3));
+        cv::resize(cameraFrame, cameraFrame, cv::Size(cameraFrame.cols / 3, cameraFrame.rows / 3));
 
         // 创建一个新的处理线程
         // threadStatusFlag[threadTag] = pthread_create(&threads[threadTag], NULL, tFunc, &cameraFrame);
@@ -131,15 +131,15 @@ void Widget::on_openCamera_clicked()
         ret = cropFrame4BarCode4Video(cameraFrame, barCodeMaskImg, barCodeImg);
 
         // 使用方法一检测
-        // if (0 == methodFlag)
-        // {
-        //     methodLeaping2DetectBarCodeImg(barCodeImg, barCodeNumStr);
-        // }
+        if (0 == methodFlag && barCodeImg.data)
+        {
+            methodLeaping2DetectBarCodeImg(barCodeImg, barCodeNumStr);
+        }
 
         // printf("%s\n", barCodeNumStr);
-        // QString qstr = QString::fromStdString(barCodeNumStr); // 输出字符串
-        // ui->detect->clear();
-        // ui->detect->setText(qstr);
+        QString qstr = QString::fromStdString(barCodeNumStr); // 输出字符串
+        ui->detect->clear();
+        ui->detect->setText(qstr);
 
         // 在QT中显示效果
         cv::cvtColor(framedBarCodeImg, cvTempImg, COLOR_BGR2RGB);
@@ -148,11 +148,14 @@ void Widget::on_openCamera_clicked()
         ui->imgFrame->setPixmap(QPixmap::fromImage(qtShowImg));
         ui->imgFrame->show();
 
-        // cv::cvtColor(barCodeImg, cvTempImg, COLOR_BGR2RGB);
-        // qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
-        // ui->cropImg->clear();
-        // ui->cropImg->setPixmap(QPixmap::fromImage(qtShowImg));
-        // ui->cropImg->show();
+        if (barCodeImg.data)
+        {
+            cv::cvtColor(barCodeImg, cvTempImg, COLOR_BGR2RGB);
+            qtShowImg = QImage((const unsigned char *)(cvTempImg.data), cvTempImg.cols, cvTempImg.rows, cvTempImg.step, QImage::Format_RGB888);
+            ui->cropImg->clear();
+            ui->cropImg->setPixmap(QPixmap::fromImage(qtShowImg));
+            ui->cropImg->show();
+        }
 
         // ESC-如果删除这句会报错
         if (cv::waitKey(30) == 27)

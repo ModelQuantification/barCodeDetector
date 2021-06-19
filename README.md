@@ -39,7 +39,7 @@ Pipeline模式为管道模式，也称为流水线模式。通过预先设定好
 简单来说这里的缓冲区的作用就是为了平衡生产者和消费者的处理能力，起到一个数据缓存的作用，同时也达到了一个解耦的作用。  
 通过[A simple C++11 Thread Pool implementation](https://github.com/progschj/ThreadPool)实现的线程池和自己实现OpenCV视频帧队列完成这个设计的实现。  
 
-### 实现
+### 实现  
 
 
 ## 按钮二：打开图片并检测  
@@ -50,3 +50,9 @@ Pipeline模式为管道模式，也称为流水线模式。通过预先设定好
 
 ## 按钮四：关闭摄像头  
 如果之前打开摄像头，则关闭摄像头  
+
+# 版权信息  
+本项目受MIT License保护。请遵守MIT License。我作为开源爱好者感谢您这种行为！  
+This project is protected by the MIT license. Please comply with the MIT license. As an open source enthusiast, I thank you for this kind of behavior!  
+本项目的诞生离不开众多开源项目以及其他开源软件。这些开源项目由各自许可证保护，并不完全受本项目许可证保护。  
+- 本仓库包含了从 progschj (https://github.com/progschj/ThreadPool) 下载的源码，并遵循其 Zlib 公共许可协议。  

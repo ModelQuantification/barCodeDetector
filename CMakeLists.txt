@@ -21,6 +21,7 @@ find_package(OpenCV REQUIRED)
 find_package(Threads)
 find_package(PythonLibs 3.6 REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
+include_directories(includes)
 
 include_directories(User)
 file(GLOB_RECURSE SOURCES "User/*.*")

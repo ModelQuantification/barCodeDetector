@@ -43,7 +43,7 @@ Mat DetectBarCodeInImage(Mat image)
     // imshow("腐蚀",Threshold);
 
     // 膨胀，填充条形码间空隙
-    for (int i = 0; i < 5; ++i)
+    for (int i = 0; i < 10; ++i)
         dilate(Threshold, Threshold, element);
     // imshow("膨胀", Threshold);
 

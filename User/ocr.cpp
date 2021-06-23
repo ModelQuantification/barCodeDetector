@@ -52,6 +52,7 @@ int methodLeaping2DetectBarCodeImg(Mat barCodeImg, char *barCodeNumStr)
     if (pCodeInfo == NULL) // 如果请求不了内存
         return -1;
     float temp;
+    // 结尾符号
     *(pCodeInfo + 95) = 99;
     for (int i = 0; i < 95; i++)
     {

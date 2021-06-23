@@ -158,7 +158,7 @@ int GenerateMiddleYData(Mat image, uint8_t *ptrPx)
 }
 
 /**
- * @brief 在数组中找到条形码开始和结尾的Index
+ * @brief 在内存中找到条形码开始和结尾的Index，第一个黑色像素为开始，最后一个黑色像素为结束
  */
 int FindBarCodeStart_EndPxInArray(uint8_t *array, int *barCodeStartPx, int *barCodeEndPx)
 {
@@ -175,7 +175,7 @@ int FindBarCodeStart_EndPxInArray(uint8_t *array, int *barCodeStartPx, int *barC
             *barCodeStartPx = i;
         }
 
-        // 判断最后一个黑色像素, 但要注意一旦到最后一个就break掉
+        // 判断最后一个黑色像素
         if (barCodeStartPxFinded && *(array + i) == 255 && *(array + i - 1) == 0)
         {
             // 把白色像素的位置打印出来
